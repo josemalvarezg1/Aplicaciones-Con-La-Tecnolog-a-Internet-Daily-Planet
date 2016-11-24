@@ -21,7 +21,7 @@
 					 
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 						 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-					</button> <a class="navbar-brand" href="#">Inicio</a>
+					</button> <a class="navbar-brand" href="inicio">Inicio</a>
 				</div>
 				
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -41,7 +41,7 @@
 							<a href="#">Perfil</a>
 						</li>
 						<li>
-							<a href="#">Cerrar Sesión</a>
+							<a href="logout">Cerrar Sesión</a>
 						</li>
 					</ul>
 					
@@ -61,7 +61,7 @@
 			<div class="row content">
 	  			<div class="col-sm-12">
 					<div id="logo" >
-						<a href="#"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
+						<a href="inicio"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
 					</div>
 				</div>
 			</div>
@@ -71,33 +71,35 @@
 			<div class="container">
 
 				<div class="row">
-	                <form>
+	                <form class="form-signin" action="crear" method="POST">
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="titulo">Título:</label>
-								<input type="text" class="form-control" id="titulo" placeholder="Título">
+								<input type="text" class="form-control" name="titulo"  placeholder="Título" required="true" autocomplete="off">
 						</div>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="resumen">Resumen:</label>
-								<textarea class="form-control" id="resumen" placeholder="Resumen" rows="3"></textarea>
+								<textarea class="form-control" name="resumen" placeholder="Resumen" rows="3" required="true" autocomplete="off"></textarea>
 						</div>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="resumen">Imagen:</label>
 								<img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object">
-							<input type="file" name="pic" accept="image/*"><br>
+							<input type="file" name="pic" accept="image/*" required="true" autocomplete="off"><br>
 						</div>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="titulo">Palabras Clave:</label>
-								<input type="text" class="form-control" id="titulo" placeholder="Palabras Clave">
+								<input type="text" class="form-control" name="clave" placeholder="Palabras Clave" required="true" autocomplete="off">
 						</div>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="resumen">Contenido:</label>
-								<textarea class="form-control" id="resumen" placeholder="Resumen" rows="6"></textarea>
-					</form>
+								<textarea class="form-control" name="contenido" placeholder="Contenido" rows="6" required="true" autocomplete="off"></textarea>
+						</div>
+
+						<div class="text-center">
+							<button type="submit" class="btn btn-success">Guardar</button>
+				 			<a href="inicio"><button class="btn btn-danger">Cancelar</button></a>
+				 		</div></br>
+					</form>				
 				</div>
-				<div class="text-center">
-					<button class="btn btn-success">Guardar</button>
-		 			<button class="btn btn-danger">Cancelar</button>
-		 		</div><br>
             </div>
         </div>
 	</div>

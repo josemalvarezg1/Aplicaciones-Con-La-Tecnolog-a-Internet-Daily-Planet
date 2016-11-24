@@ -10,6 +10,7 @@ client = MongoClient()
 db = client.dailyplanet
 users = db.users
 comments = db.comments
+posts = db.posts
 username = ""
 # Routes Definition
 #Validar que exista una SESSION
@@ -40,6 +41,26 @@ def indexNoSesion():
 	session.pop('name', None)
 	return render_template('articulosDeHoyNoSesion.html')
 
+@app.route('/create')
+def create():
+	return render_template('crearArticulo.html', user = session['name'])
+
+@app.route('/crear', methods=['POST'])
+def crear():
+	username = session['name']
+	titulo = request.form['titulo']
+	resumen  = request.form['resumen']
+	imagen = request.form['pic']
+	clave = request.form['clave']
+	contenido = request.form['contenido']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	fechaPublic = time.strftime("%d/%m/%Y")
+	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic})
+	return render_template('articulosDeHoy.html', user = session['name'], created = "true", titulo = titulo)
+
 @app.route('/register', methods=['POST'])
 def register():
 	nombre = request.form['nombre']
@@ -59,10 +80,10 @@ def article():
 	username = session['name']
 	return render_template('articuloX.html', user = username)
 
-@app.route('/comment', methods=['GET'])
+@app.route('/comment', methods=['POST'])
 def comment():
 	username = session['name']
-	#Se inserta el comentario a la BD
+	#Falta identificar el articulo en el que se comenta
 	id_article = 1
 	user = users.find_one({ "correo": username })
 	nombre = user["nombre"]
@@ -71,9 +92,6 @@ def comment():
 	fechaPublic = time.strftime("%d/%m/%Y")
 	content = request.form.get('content')
 	comments.insert_one({"id_article": id_article, "nombre": nombreCompleto, "fecha": fechaPublic, "contenido": content})
-	#print(content)
-	print("ALOOOOOOOOOOOOO")
-	#db.comments.insert_one({culo: 'aa'})
 	return render_template('articuloX.html', user = username)
 
 
