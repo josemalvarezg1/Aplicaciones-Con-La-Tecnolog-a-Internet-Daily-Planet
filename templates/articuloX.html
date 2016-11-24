@@ -108,23 +108,7 @@
 					<button class="btn btn-primary" type="button" id="viewComments" onclick="displayComments();">
 						<em class="glyphicon glyphicon-plus"></em> Ver Comentarios
 					</button> </br></br>
-					<div id="comments" style="display: none;">
-						<blockquote>
-							<p>
-								se pondra al descubierto la banda "la periquera".
-							</p> <small>Rafael Rodriguez Cedeño </small>
-						</blockquote>
-						<blockquote>
-							<p>
-								Que se pudran en la carcel esos malditos
-							</p> <small>Angel Fratello </small>
-						</blockquote>
-						<blockquote>
-							<p>
-								A CANTAR PAJARITOS, ¡ , DIOSDADO, PEDRO CARREÑO, REVEROL,RANGEL SILVA, TAREK ALSAIMI, TEMBLAD ¡ ESTOS NARCOS SOBRINOS, NO COMERAN PAN DE JAMON, HALLACA, ENSALADA DE GALLINA NI WHISKY 18 AÑOS, POR LOS PROXIMOS 30 AÑOS ¡ HOHOHOHOHOHOHOHOH ¡
-							</p> <small>Mark Smith</cite></small>
-						</blockquote>
-					</div>
+					<div id="comments" style="display: none;"></div>
 					<strong>Comentar:</strong>
 					<form class="form-signin" action="comment" method="POST">
 						<textarea style="width:100%; resize: none;" name="content" autocomplete="off"></textarea></br></br>
@@ -140,18 +124,29 @@
     <script src="../static/vendor/js/bootstrap.min.js"></script>
     <script src="../static/vendor/js/scripts.js"></script>
     <script type="text/javascript">
-    	var someJavaScriptVar = '{{ allComents }}';
-    	//someJavaScriptVar = someJavaScriptVar.replace(/u&#39;/g, '"'); 
-    	someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"'); 
-    	var JSON = JSON.parse(someJavaScriptVar);
 
-    	//Recorrer todo el JSON con un for e ir appendeando al HTML
-    	
-    		var contenido = JSON[10].contenido;
-    		var nombre = JSON[10].nombre;
-    		var fecha = JSON[10].fecha;
+        var someJavaScriptVar = '{{ allComents }}';
+        someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"');
+        var JSON = JSON.parse(someJavaScriptVar);
+		var i = 0;
+		if (JSON.length == 0) {
 
-    		alert(contenido + " " + nombre + " " + fecha);
+			var comments = document.getElementById('comments');
+			comments.innerHTML = comments.innerHTML + '<p style="margin-left:1%"><strong>No se han publicado comentarios.</strong></p></br>';
+
+		} else {
+
+			for (i = 0; i<JSON.length; i++) {
+
+				var contenido = JSON[i].contenido;
+				var nombre = JSON[i].nombre;
+				var fecha = JSON[i].fecha;
+				var comments = document.getElementById('comments');
+				comments.innerHTML = comments.innerHTML + '<blockquote><p>' + contenido + '</p><small>' + nombre + ' - ' + fecha + '</small></blockquote>';      
+
+			}
+
+		}
 
     </script>
   </body>
