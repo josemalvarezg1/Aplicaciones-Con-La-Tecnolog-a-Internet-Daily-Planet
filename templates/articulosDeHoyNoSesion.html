@@ -53,13 +53,13 @@
 									<label for="exampleInputEmail1">
 										Fecha de Nacimiento
 									</label>
-					                <input type='text' id="date" name="fechaNac" class="form-control" autocomplete="off"/>
+					                <input type='text' id="date" name="fechaNac" class="form-control" required="true" autocomplete="off"/>
 								</div>				
 								<div class="form-group">									 
 									<label for="exampleInputFile">
 										Avatar
 									</label>
-									<input name="avatar" type="file" autocomplete="off"/>
+									<input name="avatar" type="file" required="true" autocomplete="off"/>
 								</div>
 								<div class="form-group">									 
 									<label for="exampleInputEmail1">
@@ -103,18 +103,18 @@
 									<label for="exampleInputPassword1">
 										Contraseña
 									</label>
-									<input class="form-control" name="password1" type="password" autocomplete="off"/>
+									<input class="form-control" name="password1" type="password" required="true" autocomplete="off" oninput="password2.pattern = escapeRegExp(this.value)"/>
 								</div>
 								<div class="form-group">									 
 									<label for="exampleInputPassword1">
 										Repita Contraseña
 									</label>
-									<input class="form-control" name="password2" type="password" autocomplete="off"/>
+									<input class="form-control" name="password2" type="password" required="true" autocomplete="off" pattern="" title="Las contraseñas deben coincidir"/>
 								</div>
 								<div style="text-align: center;">
 									<div class="checkbox">									 
 										<label>
-											<input type="checkbox" autocomplete="off"/> He leído y acepto los <a href="#">Términos y Condiciones</a>
+											<input type="checkbox" required="true" autocomplete="off"/> He leído y acepto los <a href="#">Términos y Condiciones</a>
 										</label>
 									</div>
 								</div> 
@@ -191,6 +191,36 @@
 							</div>
 							<div class="modal-body">	
 								<p style="text-align: center;">Registro exitoso. Por favor ingrese con sus credenciales desde Iniciar Sesión.</p>
+								<div class="modal-footer" style="text-align: center;">							 
+									<button type="button" class="btn btn-primary" data-dismiss="modal">
+										Aceptar
+									</button>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+				</div>
+
+			{% endif %}
+
+			{% if error %}
+
+				<div class="modal fade" id="modal-inicio-no-exitoso" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								 
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									×
+								</button>
+								<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+									Datos Inválidos
+								</h4>
+							</div>
+							<div class="modal-body">	
+								<p style="text-align: center;">Datos inválidos. Por favor inténtelo de nuevo.</p>
 								<div class="modal-footer" style="text-align: center;">							 
 									<button type="button" class="btn btn-primary" data-dismiss="modal">
 										Aceptar
@@ -399,6 +429,10 @@
 			}
 		};
 
+		function escapeRegExp(str) {
+	    	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+	    }
+
 		$.datepicker.regional['es'] = {
 		closeText: 'Cerrar',
 		prevText: '<Ant',
@@ -420,7 +454,17 @@
 		$(function () {
             $('#date').datepicker();
             $('#modal-reg-exitoso').modal('toggle');
+            $('#modal-inicio-no-exitoso').modal('toggle');
         });
     </script>
+    <style type="text/css">
+    	.ui-widget-content .ui-icon {
+	    background-image: url("../static/imagenes/css_images_ui-icons_222222_256x240.png")      
+	    !important;}
+	    .ui-widget-header .ui-icon {
+	    background-image: url("../static/imagenes/css_images_ui-icons_222222_256x240.png")   
+	    !important;}
+
+    </style>
   </body>
 </html>

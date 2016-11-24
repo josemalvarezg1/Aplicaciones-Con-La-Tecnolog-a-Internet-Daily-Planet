@@ -18,17 +18,27 @@ username = ""
 def index():
 	return render_template('articulosDeHoyNoSesion.html')
 
+@app.route('/inicio')
+def indexSesion():
+	return render_template('articulosDeHoy.html', user = session['name'])
+
 @app.route('/login', methods=['POST'])
 def login():
 	username = request.form['email']
 	password  = request.form['pass']
 	user = users.find_one({ "correo": username })
+	#debe ser articulosDeHoyNoSesion con un param modal de datos invalidos
 	if (user is None) or (len(user) == 0):
-		return render_template('nop.html')
+		return render_template('articulosDeHoyNoSesion.html', error = "true")
 	if user["pass"] == password:
 		session['name'] = username
-		return render_template('articulosDeHoy.html', logotipo = username, nombre = password)
-	return render_template('nop.html')
+		return render_template('articulosDeHoy.html', user = username)
+	return render_template('articulosDeHoyNoSesion.html', error = "true")
+
+@app.route('/logout')
+def indexNoSesion():
+	session.pop('name', None)
+	return render_template('articulosDeHoyNoSesion.html')
 
 @app.route('/register', methods=['POST'])
 def register():
