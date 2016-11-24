@@ -1,5 +1,8 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, json
 from pymongo import *
+from werkzeug import secure_filename
+from bson import BSON
+from bson import json_util
 import time
  
 app = Flask(__name__, template_folder = 'templates', static_folder = 'static')
@@ -68,6 +71,8 @@ def register():
 	correo = request.form['correo']
 	fechaNac = request.form['fechaNac']
 	avatar = request.form['avatar']
+	#filename = secure_filename(avatar.filename)
+	#avatar.save(os.path.join("hola/", filename))
 	pais = request.form['pais']
 	tipo = request.form['tipo']
 	descripcion = request.form['descripcion']
@@ -77,6 +82,7 @@ def register():
 
 @app.route('/articulo', methods=['GET'])
 def article():
+	#Debo pasarle allComents y solo del articulo en donde estoy
 	username = session['name']
 	return render_template('articuloX.html', user = username)
 
@@ -92,7 +98,9 @@ def comment():
 	fechaPublic = time.strftime("%d/%m/%Y")
 	content = request.form.get('content')
 	comments.insert_one({"id_article": id_article, "nombre": nombreCompleto, "fecha": fechaPublic, "contenido": content})
-	return render_template('articuloX.html', user = username)
+	#Debo pasarle allComents y solo del articulo en donde estoy
+	allComents = list(comments.find())
+	return render_template('articuloX.html', user = username, allComents = json.dumps(allComents, default=json_util.default))
 
 
 if __name__ == '__main__':
