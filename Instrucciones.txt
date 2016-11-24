@@ -1,0 +1,4 @@
+Instrucciones de uso.
+
+Importar BD de usuarios registrados:
+mongoimport --jsonArray --db dailyplanet --collection users --drop --file users.json 

@@ -1,0 +1,22 @@
+{
+	"nombre":"José",
+	"apellido":"Alvarez",
+	"correo":"josemalvarezg1@gmail.com",
+	"fechaNac":"25/09/1995",
+	"avatar":"../static/imagenes/jose.png",
+	"pais":"Venezuela",
+	"tipo":"Autor",
+	"descripcion":"Autor en Daily Planet.",
+	"pass":"123"
+}
+{
+	"nombre":"Daniel",
+	"apellido":"Rodriguez",
+	"correo":"daniel@gmail.com",
+	"fechaNac":"25/09/1995",
+	"avatar":"../static/imagenes/daniel.png",
+	"pais":"Venezuela",
+	"tipo":"Autor",
+	"descripcion":"Autor en Daily Planet.",
+	"pass":"123"
+}
