@@ -87,6 +87,12 @@ def article():
 	allComents = list(comments.find())
 	return render_template('articuloX.html', user = username, allComents = json.dumps(allComents, default=json_util.default))
 
+@app.route('/articuloNS', methods=['GET'])
+def articleNS():
+	#Debo pasarle allComents y solo del articulo en donde estoy
+	allComents = list(comments.find())
+	return render_template('articuloXNoSesion.html', user = "false", allComents = json.dumps(allComents, default=json_util.default))
+
 @app.route('/comment', methods=['POST'])
 def comment():
 	username = session['name']

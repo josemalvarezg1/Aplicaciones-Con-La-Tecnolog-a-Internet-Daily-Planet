@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Artículo X</title>
+
+    <link href="../static/vendor/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/vendor/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="all" href="../static/vendor/css/jquery-ui.css"/>
+    <script type="text/javascript">
+    	
+    	function displayComments() {
+    		if (document.getElementById("comments").style.display == "none") {
+    			document.getElementById("comments").style.display = "inline";
+    		} else {
+    			document.getElementById("comments").style.display = "none";
+    		}
+    	}
+
+    </script>
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+	<div class="row">
+
+		<div class="modal fade" id="modal-registrar" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						 
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							×
+						</button>
+						<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+							Registrar
+						</h4>
+					</div>
+					<div class="modal-body">							
+						<form role="form" action="register" method="POST">
+							<div class="form-group">									 
+								<label for="exampleInputEmail1">
+									Nombre
+								</label>
+								<input class="form-control" name="nombre" type="text" required="true" autocomplete="off"/>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputEmail1">
+									Apellido
+								</label>
+								<input class="form-control" name="apellido" type="text" required="true" autocomplete="off"/>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputEmail1">
+									Correo
+								</label>
+								<input class="form-control" name="correo" type="email" required="true" autocomplete="off"/>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputEmail1">
+									Fecha de Nacimiento
+								</label>
+				                <input type='text' id="date" name="fechaNac" class="form-control" required="true" autocomplete="off"/>
+							</div>				
+							<div class="form-group">									 
+								<label for="exampleInputFile">
+									Avatar
+								</label>
+								<input name="avatar" type="file" required="true" autocomplete="off"/>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputEmail1">
+									País
+								</label>
+								<select class="form-control" name="pais" autocomplete="off"/>
+									<option>Argentina</option>
+									<option>Bolivia</option>
+									<option>Brasil</option>
+									<option>Chile</option>
+									<option>Colombia</option>
+									<option>Ecuador</option>
+									<option>España</option>
+									<option>Estados Unidos</option>
+									<option>Francia</option>
+									<option>Paraguay</option>
+									<option>Peru</option>
+									<option>Portugal</option>
+									<option>Uruguay</option>
+									<option>Venezuela</option>
+									<option>Otro</option>
+								</select>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputEmail1">
+									Tipo de Usuario
+								</label>
+								<select class="form-control" name="tipo" autocomplete="off"/>
+									<option>Lector</option>
+									<option>Editor</option>
+									<option>Autor</option>
+								</select>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputEmail1">
+									Descripción
+								</label>
+								<textarea class="form-control" name="descripcion" required="true" autocomplete="off"/></textarea>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputPassword1">
+									Contraseña
+								</label>
+								<input class="form-control" name="password1" type="password" required="true" autocomplete="off" oninput="password2.pattern = escapeRegExp(this.value)"/>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputPassword1">
+									Repita Contraseña
+								</label>
+								<input class="form-control" name="password2" type="password" required="true" autocomplete="off" pattern="" title="Las contraseñas deben coincidir"/>
+							</div>
+							<div style="text-align: center;">
+								<div class="checkbox">									 
+									<label>
+										<input type="checkbox" required="true" autocomplete="off"/> He leído y acepto los <a href="#">Términos y Condiciones</a>
+									</label>
+								</div>
+							</div> 
+							<div class="modal-footer" style="text-align: center;">							 
+								<button type="submit" class="btn btn-primary">
+									Aceptar
+								</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">
+									Cancelar
+								</button> 
+							</div>
+							
+						</form>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+
+		<div class="modal fade" id="modal-iniciar" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						 
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							×
+						</button>
+						<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+							Iniciar Sesión
+						</h4>
+					</div>
+					<div class="modal-body">							
+						<form class="form-signin" action="login" method="POST">
+							<div class="form-group">									 
+								<label for="exampleInputEmail1">
+									Correo
+								</label>
+								<input class="form-control" id="exampleInputEmail1" name="email" type="email" required="true" autocomplete="off"/>
+							</div>
+							<div class="form-group">									 
+								<label for="exampleInputPassword1">
+									Contraseña
+								</label>
+								<input class="form-control" id="exampleInputPassword1" name="pass" required="true" type="password" autocomplete="off"/>
+							</div>
+							<div class="modal-footer" style="text-align: center;">							 
+								<button type="submit" class="btn btn-primary">
+									Iniciar Sesión
+								</button>
+							</div>
+							
+						</form>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+		<div class="col-md-12">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="navbar-header">
+					 
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+					</button> <a class="navbar-brand active" href="/">Inicio</a>
+				</div>
+				
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav navbar-right">
+							<li>
+								<a href="#modal-registrar" role="button" class="btn" data-toggle="modal">Registrar</a>
+							</li>
+							<li>
+								<a href="#modal-iniciar" role="button" class="btn" data-toggle="modal">Iniciar Sesión</a>
+							</li>
+						</ul>
+						
+					</div>
+					
+				</div>
+				
+			</nav>
+			<div class="row content">
+	  			<div class="col-sm-12">
+					<div id="logo" >
+						<a href="/"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
+					</div>
+				</div>
+			</div>
+			<h1 class="text-center">
+				Dura opción de los narcosobrinos: Larga cárcel o cooperar
+			</h1>
+			<div class="row" style="text-align: justify;">
+				<div class="col-md-12"></br>
+					<div class="media text-center" style=" float: left;">
+						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/500/240/" class="media-object center-block"></a>
+					</div></br>
+					<strong>Autor:</strong> Franco Ordoñez</br>
+					<strong>Editores:</strong> Alvarez, Rodriguez</br>
+					<strong>Fecha de Publicación:</strong> 22/11/2016</br>
+					<strong>Resumen:</strong> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.</br>
+					<p>
+						</br>Ahora que han sido declarados culpables, ellos no cuentan con muchas opciones para reducir sus sentencias. Pero una manera en que podrían recortar sus condenas de cárcel, sería la cooperación con funcionarios de EEUU que están impacientes por obtener más información sobre los mecanismos internos del narcotráfico a través de Venezuela y en toda la región. </br></br>
+
+						Efraín Campo, de 30 años, y Francisco Flores, de 31, sobrinos del presidente venezolano Nicolás Maduro y su esposa, Cilia Flores, fueron declarados culpables el viernes pasado de planear el contrabando de cocaína del hangar presidencial en el aeropuerto de Caracas a Honduras para enviarlo a Estados Unidos. La sentencia mínima es de 10 años, pero ellos enfrentan condenas mucho más largas, debido a la gran cantidad de drogas involucradas. </br></br>
+
+						Ellos tienen cuatro meses antes de su audiencia de sentencia. Sus abogados han presentado mociones para revocar el veredicto alegando que la evidencia es insuficiente. De no conseguirlo, ellos litigarán hasta conseguir la sentencia más baja posible. </br></br>
+
+						Cooperar podría ser la mejor de sus opciones, aun cuando sea algo distante. </br></br>
+
+						Por lo general, el fiscal federal del Distrito Sur de Nueva York, o cualquier otro fiscal federal, no permite que los acusados cooperen después de haber ido a juicio, pero ellos pueden hacer una excepción en un caso tan célebre, y también gracias a la naturaleza explosiva de la información que podrían tener Campo y Flores para implicar a otros miembros de su familia u otros altos funcionarios venezolanos. </br></br>
+
+						“Por supuesto que ellos pueden arrojar luz entre los lazos de lo que estaban haciendo y los funcionarios más altos “, dijo Brian Fonseca, director del Instituto Gordon de Política Pública en la Universidad Internacional de la Florida. “La pregunta es si ellos revelarán esa información o no por no poner en peligro a su familia en Venezuela, por razones de lealtad o por lo que sea”. </br></br>
+					</p>
+					<button class="btn btn-primary" type="button" id="viewComments" onclick="displayComments();">
+						<em class="glyphicon glyphicon-plus"></em> Ver Comentarios
+					</button> </br></br>
+					<div id="comments" style="display: none;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+    <script src="../static/vendor/js/jquery.min.js"></script>
+    <script src="../static/vendor/js/jquery-ui.min.js"></script>    
+    <script src="../static/vendor/js/bootstrap.min.js"></script>
+    <script src="../static/vendor/js/scripts.js"></script>
+    <script type="text/javascript">
+
+        var someJavaScriptVar = '{{ allComents }}';
+        someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"');
+        var JSON = JSON.parse(someJavaScriptVar);
+		var i = 0;
+		if (JSON.length == 0) {
+
+			var comments = document.getElementById('comments');
+			comments.innerHTML = comments.innerHTML + '<p style="margin-left:1%"><strong>No se han publicado comentarios.</strong></p></br>';
+
+		} else {
+
+			for (i = 0; i<JSON.length; i++) {
+
+				var contenido = JSON[i].contenido;
+				var nombre = JSON[i].nombre;
+				var fecha = JSON[i].fecha;
+				var comments = document.getElementById('comments');
+				comments.innerHTML = comments.innerHTML + '<blockquote><p>' + contenido + '</p><small>' + nombre + ' - ' + fecha + '</small></blockquote>';      
+
+			}
+
+		}
+
+    </script>
+    <script type="text/javascript">   
+		var getUrlParameter = function getUrlParameter(sParam) {
+			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+			    sURLVariables = sPageURL.split('&'),
+			    sParameterName,
+			    i;
+
+			for (i = 0; i < sURLVariables.length; i++) {
+			    sParameterName = sURLVariables[i].split('=');
+
+			    if (sParameterName[0] === sParam) {
+			        return sParameterName[1] === undefined ? true : sParameterName[1];
+			    }
+			}
+		};
+
+		function escapeRegExp(str) {
+	    	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+	    }
+
+		$.datepicker.regional['es'] = {
+		closeText: 'Cerrar',
+		prevText: '<Ant',
+		nextText: 'Sig>',
+		currentText: 'Hoy',
+		monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		weekHeader: 'Sm',
+		dateFormat: 'dd/mm/yy',
+		firstDay: 1,
+		isRTL: false,
+		showMonthAfterYear: false,
+		yearSuffix: ''
+		};
+		$.datepicker.setDefaults($.datepicker.regional['es']);
+		$(function () {
+            $('#date').datepicker();
+            $('#modal-reg-exitoso').modal('toggle');
+            $('#modal-inicio-no-exitoso').modal('toggle');
+        });
+    </script>
+    <style type="text/css">
+    	.ui-widget-content .ui-icon {
+	    background-image: url("../static/imagenes/css_images_ui-icons_222222_256x240.png")      
+	    !important;}
+	    .ui-widget-header .ui-icon {
+	    background-image: url("../static/imagenes/css_images_ui-icons_222222_256x240.png")   
+	    !important;}
+
+    </style>
+  </body>
+</html>
