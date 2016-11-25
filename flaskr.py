@@ -28,7 +28,7 @@ def index():
 @app.route('/inicio')
 def indexSesion():
 	allPosts = list(posts.find({"publicado": 1}))
-	return render_template('articulosDeHoy.html', allPosts = allPosts)
+	return render_template('articulosDeHoy.html', allPosts = json.dumps(allPosts, default=json_util.default))
 
 @app.route('/login', methods=['POST'])
 def login():
