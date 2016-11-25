@@ -265,7 +265,7 @@
 				var contenido = JSON[i].contenido;
 				var nombre = JSON[i].nombre;
 				var fecha = JSON[i].fecha;
-				var imagen = JSON[i].imagen;
+				var imagen = JSON[i].avatar;
 				var comments = document.getElementById('comments');
 				comments.innerHTML = comments.innerHTML + '<blockquote><p>' + contenido + '</p><img src="../static/imagenes/'+imagen+'" style="max-height: 32px; max-width: 32px; float: left; margin-right: 10px" class="media-object"><small>' + nombre + ' - ' + fecha + '</small></blockquote>';      
 
