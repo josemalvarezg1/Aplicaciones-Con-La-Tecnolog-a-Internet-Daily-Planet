@@ -23,7 +23,7 @@ username = ""
 def index():
 	fechaPublic = time.strftime("%d/%m/%Y")
 	todaysPosts = list(posts.find({"fecha": fechaPublic, "publicado": 1}))
-	return render_template('articulosDeHoyNoSesion.html', todaysPosts = todaysPosts)
+	return render_template('articulosDeHoyNoSesion.html', todaysPosts = json.dumps(todaysPosts, default=json_util.default))
 
 @app.route('/inicio')
 def indexSesion():
@@ -35,12 +35,15 @@ def login():
 	username = request.form['email']
 	password  = request.form['pass']
 	user = users.find_one({ "correo": username })
+	fechaPublic = time.strftime("%d/%m/%Y")
+	todaysPosts = list(posts.find({"fecha": fechaPublic, "publicado": 1}))
+	allPosts = list(posts.find({"publicado": 1}))
 	if (user is None) or (len(user) == 0):
-		return render_template('articulosDeHoyNoSesion.html', error = "true")
+		return render_template('articulosDeHoyNoSesion.html', error = "true", todaysPosts = json.dumps(todaysPosts, default=json_util.default))
 	if user["pass"] == password:
 		session['name'] = username
-		return render_template('articulosDeHoy.html', user = username)
-	return render_template('articulosDeHoyNoSesion.html', error = "true")
+		return render_template('articulosDeHoy.html', user = username, allPosts = json.dumps(allPosts, default=json_util.default))
+	return render_template('articulosDeHoyNoSesion.html', error = "true", todaysPosts = json.dumps(todaysPosts, default=json_util.default))
 
 @app.route('/logout')
 def indexNoSesion():
@@ -156,16 +159,32 @@ def register():
 
 @app.route('/articulo', methods=['GET'])
 def article():
-	#Debo pasarle allComents y solo del articulo en donde estoy
 	username = session['name']
+	articulo = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
+	titulo = articulo["titulo"]
+	nombre = articulo["nombre"]
+	editores = "Alvarez, Rodriguez"
+	fechaPublic = articulo["fecha"]
+	resumen = articulo["resumen"]
+	contenido = articulo["contenido"]
+	#Debo pasarle allComents solo del articulo en donde estoy
 	allComents = list(comments.find())
-	return render_template('articuloX.html', user = username, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, titulo = titulo, nombre = nombre, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/articuloNS', methods=['GET'])
 def articleNS():
 	#Debo pasarle allComents y solo del articulo en donde estoy
 	allComents = list(comments.find())
-	return render_template('articuloXNoSesion.html', user = "false", allComents = json.dumps(allComents, default=json_util.default))
+	articulo = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
+	titulo = articulo["titulo"]
+	nombre = articulo["nombre"]
+	editores = "Alvarez, Rodriguez"
+	fechaPublic = articulo["fecha"]
+	resumen = articulo["resumen"]
+	contenido = articulo["contenido"]
+	#Debo pasarle allComents solo del articulo en donde estoy
+	allComents = list(comments.find())
+	return render_template('articuloXNoSesion.html', user = "false", titulo = titulo, nombre = nombre, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/comment', methods=['POST'])
 def comment():
