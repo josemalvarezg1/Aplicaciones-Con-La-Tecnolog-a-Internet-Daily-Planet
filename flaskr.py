@@ -48,7 +48,9 @@ def login():
 @app.route('/logout')
 def indexNoSesion():
 	session.pop('name', None)
-	return render_template('articulosDeHoyNoSesion.html')
+	fechaPublic = time.strftime("%d/%m/%Y")
+	todaysPosts = list(posts.find({"fecha": fechaPublic, "publicado": 1}))
+	return render_template('articulosDeHoyNoSesion.html', todaysPosts = json.dumps(todaysPosts, default=json_util.default))
 
 @app.route('/create')
 def create():
@@ -154,8 +156,10 @@ def register():
 	tipo = request.form['tipo']
 	descripcion = request.form['descripcion']
 	password = request.form['password1']
+	fechaPublic = time.strftime("%d/%m/%Y")
+	todaysPosts = list(posts.find({"fecha": fechaPublic, "publicado": 1}))
 	users.insert_one({"nombre": nombre, "apellido": apellido, "correo": correo, "fechaNac": fechaNac, "avatar": avatar, "pais": pais, "tipo": tipo, "descripcion": descripcion, "pass": password})
-	return render_template('articulosDeHoyNoSesion.html', reg = "true")
+	return render_template('articulosDeHoyNoSesion.html', reg = "true", todaysPosts = json.dumps(todaysPosts, default=json_util.default))
 
 @app.route('/articulo', methods=['GET'])
 def article():
