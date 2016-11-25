@@ -172,8 +172,8 @@ def article():
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
 	#Debo pasarle allComents solo del articulo en donde estoy
-	allComents = list(comments.find())
-	return render_template('articuloX.html', user = username, titulo = titulo, nombre = nombre, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	allComents = list(comments.find({"id_article": articulo}))
+	return render_template('articuloX.html', user = username, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/articuloNS', methods=['GET'])
 def articleNS():
@@ -194,17 +194,17 @@ def articleNS():
 def comment():
 	username = session['name']
 	#Falta identificar el articulo en el que se comenta
-	id_article = 1
+	articulo = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
 	user = users.find_one({ "correo": username })
 	nombre = user["nombre"]
 	apellido = user["apellido"]
 	nombreCompleto = nombre+" "+apellido
 	fechaPublic = time.strftime("%d/%m/%Y")
 	content = request.form.get('content')
-	comments.insert_one({"id_article": id_article, "nombre": nombreCompleto, "fecha": fechaPublic, "contenido": content})
+	comments.insert_one({"id_article": articulo, "nombre": nombreCompleto, "fecha": fechaPublic, "contenido": content})
 	#Debo pasarle allComents y solo del articulo en donde estoy
-	allComents = list(comments.find())
-	return render_template('articuloX.html', user = username, allComents = json.dumps(allComents, default=json_util.default))
+	allComents = list(comments.find({"id_article": articulo}))
+	return render_template('articuloX.html', user = username, id_article = request.args.get('id'), allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/profile')
 def profile():
