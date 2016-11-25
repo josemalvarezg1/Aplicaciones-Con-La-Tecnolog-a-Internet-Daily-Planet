@@ -5,9 +5,11 @@ from bson import BSON
 from bson import json_util
 from bson.objectid import ObjectId
 import time
+import os
  
 app = Flask(__name__, template_folder = 'templates', static_folder = 'static')
 app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
+app.config['UPLOAD_FOLDER'] = 'static/imagenes/'
 # MongoDB Connection with PyMongo
 client = MongoClient()
 
@@ -145,17 +147,19 @@ def crear():
 
 @app.route('/register', methods=['POST'])
 def register():
-	nombre = request.form['nombre']
-	apellido  = request.form['apellido']
-	correo = request.form['correo']
-	fechaNac = request.form['fechaNac']
-	avatar = request.form['avatar']
-	#filename = secure_filename(avatar.filename)
-	#avatar.save(os.path.join("hola/", filename))
-	pais = request.form['pais']
-	tipo = request.form['tipo']
-	descripcion = request.form['descripcion']
-	password = request.form['password1']
+	nombre = request.form.get('nombre')
+	apellido  = request.form.get('apellido')
+	correo = request.form.get('correo')
+	fechaNac = request.form.get('fechaNac')
+	file = request.files['avatar']
+	if file:
+		filename = secure_filename(file.filename)
+		avatar = filename
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+	pais = request.form.get('pais')
+	tipo = request.form.get('tipo')
+	descripcion = request.form.get('descripcion')
+	password = request.form.get('password1')
 	fechaPublic = time.strftime("%d/%m/%Y")
 	todaysPosts = list(posts.find({"fecha": fechaPublic, "publicado": 1}))
 	users.insert_one({"nombre": nombre, "apellido": apellido, "correo": correo, "fechaNac": fechaNac, "avatar": avatar, "pais": pais, "tipo": tipo, "descripcion": descripcion, "pass": password})
@@ -215,8 +219,6 @@ def profile():
 	correo = user['correo']
 	fechaNac = user['fechaNac']
 	avatar = user['avatar']
-	#filename = secure_filename(avatar.filename)
-	#avatar.save(os.path.join("hola/", filename))
 	pais = user['pais']
 	tipo = user['tipo']
 	descripcion = user['descripcion']
@@ -226,16 +228,18 @@ def profile():
 @app.route('/updateProfile', methods=['POST'])
 def updateProfile():
 	username = session['name']
-	nombre = request.form['nombre']
-	apellido  = request.form['apellido']
-	correo = request.form['correo']
-	fechaNac = request.form['fechaNac']
-	avatar = request.form['pic']
-	#filename = secure_filename(avatar.filename)
-	#avatar.save(os.path.join("hola/", filename))
-	pais = request.form['pais']
-	descripcion = request.form['descripcion']
-	password = request.form['password2']
+	nombre = request.form.get('nombre')
+	apellido  = request.form.get('apellido')
+	correo = request.form.get('correo')
+	fechaNac = request.form.get('fechaNac')
+	file = request.files['pic']
+	if file:
+		filename = secure_filename(file.filename)
+		avatar = filename
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+	pais = request.form.get('pais')
+	descripcion = request.form.get('descripcion')
+	password = request.form.get('password2')
 	users.update_one({"correo": username}, {"$set": {"nombre": nombre, "apellido": apellido, "correo": correo, "fechaNac": fechaNac, "avatar": avatar, "pais": pais, "descripcion": descripcion, "pass": password}}, upsert=False)
 	session['name'] = correo
 	username = session['name']
@@ -245,8 +249,6 @@ def updateProfile():
 	correo = user['correo']
 	fechaNac = user['fechaNac']
 	avatar = user['avatar']
-	#filename = secure_filename(avatar.filename)
-	#avatar.save(os.path.join("hola/", filename))
 	pais = user['pais']
 	tipo = user['tipo']
 	descripcion = user['descripcion']
