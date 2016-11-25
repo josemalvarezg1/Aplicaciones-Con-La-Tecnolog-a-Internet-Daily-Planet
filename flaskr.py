@@ -3,6 +3,7 @@ from pymongo import *
 from werkzeug import secure_filename
 from bson import BSON
 from bson import json_util
+from bson.objectid import ObjectId
 import time
  
 app = Flask(__name__, template_folder = 'templates', static_folder = 'static')
@@ -20,18 +21,20 @@ username = ""
 
 @app.route('/')
 def index():
-	return render_template('articulosDeHoyNoSesion.html')
+	fechaPublic = time.strftime("%d/%m/%Y")
+	todaysPosts = list(posts.find({"fecha": fechaPublic, "publicado": 1}))
+	return render_template('articulosDeHoyNoSesion.html', todaysPosts = todaysPosts)
 
 @app.route('/inicio')
 def indexSesion():
-	return render_template('articulosDeHoy.html', user = session['name'])
+	allPosts = list(posts.find({"publicado": 1}))
+	return render_template('articulosDeHoy.html', allPosts = allPosts)
 
 @app.route('/login', methods=['POST'])
 def login():
 	username = request.form['email']
 	password  = request.form['pass']
 	user = users.find_one({ "correo": username })
-	#debe ser articulosDeHoyNoSesion con un param modal de datos invalidos
 	if (user is None) or (len(user) == 0):
 		return render_template('articulosDeHoyNoSesion.html', error = "true")
 	if user["pass"] == password:
@@ -48,6 +51,75 @@ def indexNoSesion():
 def create():
 	return render_template('crearArticulo.html', user = session['name'])
 
+@app.route('/draft')
+def draft():
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	return render_template('articulosPorPublicar.html', user = session['name'], draftPosts = json.dumps(draftPosts, default=json_util.default))
+
+@app.route('/publish')
+def publish():
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	posts.update_one({"_id": ObjectId(request.args.get('id'))}, {"$set": {"publicado": 1}}, upsert=False)
+	postUpdateado = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
+	titulo = postUpdateado["titulo"]
+	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	return render_template('articulosPorPublicar.html', user = session['name'], published = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+
+@app.route('/delete')
+def delete():
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	postEliminado = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
+	posts.remove({"_id": ObjectId(request.args.get('id'))})
+	titulo = postEliminado["titulo"]
+	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	return render_template('articulosPorPublicar.html', user = session['name'], deleted = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+
+@app.route('/edit')
+def edit():
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	post = posts.find_one({"_id": ObjectId(request.args.get('id'))})
+	titulo = post["titulo"]
+	resumen = post["resumen"]
+	imagen = post["imagen"]
+	clave = post["clave"]
+	contenido = post["contenido"]
+	return render_template('editarArticulo.html', user = session['name'], titulo = titulo, resumen = resumen, imagen = imagen, clave = clave, contenido = contenido)
+
+@app.route('/editar', methods=['POST'])
+def editar():
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	titulo = request.form.get('titulo')
+	resumen = request.form.get('resumen')
+	imagen = request.form.get('pic')
+	clave = request.form.get('clave')
+	contenido = request.form.get('contenido')
+	posts.update_one({"_id": ObjectId(request.form.get('id_post'))}, {"$set": {"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido}}, upsert=False)
+	postUpdateado = posts.find_one({ "_id": ObjectId(request.form.get('id_post'))})
+	titulo = postUpdateado["titulo"]
+	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	return render_template('articulosPorPublicar.html', user = session['name'], edited = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+
 @app.route('/crear', methods=['POST'])
 def crear():
 	username = session['name']
@@ -61,8 +133,10 @@ def crear():
 	apellido = user["apellido"]
 	nombreCompleto = nombre+" "+apellido
 	fechaPublic = time.strftime("%d/%m/%Y")
-	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic})
-	return render_template('articulosDeHoy.html', user = session['name'], created = "true", titulo = titulo)
+	publicado = 0
+	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado})
+	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	return render_template('articulosPorPublicar.html', user = session['name'], created = "true", draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/register', methods=['POST'])
 def register():

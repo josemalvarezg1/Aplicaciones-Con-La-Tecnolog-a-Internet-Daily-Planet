@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Artículos por Publicar</title>
+
+    <link href="../static/vendor/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/vendor/css/style.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+		<div class="row">
+
+			{% if published %}
+
+				<div class="modal fade" id="modal-published" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								 
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									×
+								</button>
+								<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+									Artículo Publicado
+								</h4>
+							</div>
+							<div class="modal-body">	
+								<p style="text-align: center;">Artículo {{titulo}} publicado exitosamente.</p>
+								<div class="modal-footer" style="text-align: center;">							 
+									<button type="button" class="btn btn-primary" data-dismiss="modal">
+										Aceptar
+									</button>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+				</div>
+
+			{% endif %}
+
+			{% if deleted %}
+
+				<div class="modal fade" id="modal-deleted" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								 
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									×
+								</button>
+								<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+									Artículo Eliminado
+								</h4>
+							</div>
+							<div class="modal-body">	
+								<p style="text-align: center;">Artículo {{titulo}} eliminado exitosamente.</p>
+								<div class="modal-footer" style="text-align: center;">							 
+									<button type="button" class="btn btn-primary" data-dismiss="modal">
+										Aceptar
+									</button>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+				</div>
+
+			{% endif %}
+
+			{% if edited %}
+
+				<div class="modal fade" id="modal-deleted" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								 
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									×
+								</button>
+								<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+									Artículo Editado
+								</h4>
+							</div>
+							<div class="modal-body">	
+								<p style="text-align: center;">Artículo {{titulo}} editado exitosamente.</p>
+								<div class="modal-footer" style="text-align: center;">							 
+									<button type="button" class="btn btn-primary" data-dismiss="modal">
+										Aceptar
+									</button>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+				</div>
+
+			{% endif %}
+
+			<div class="col-md-12">
+				<nav class="navbar navbar-default" role="navigation">
+					<div class="navbar-header">
+						 
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+						</button> <a class="navbar-brand" href="inicio">Inicio</a>
+					</div>
+					
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li>
+								<a href="create">Crear Artículo</a>
+							</li>
+							<li class="active">
+								<a href="draft">Artículos por Publicar</a>
+							</li>
+							<li>
+								<a href="#">Artículos Favoritos</a>
+							</li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li>
+								<a href="#">Perfil</a>
+							</li>
+							<li>
+								<a href="logout">Cerrar Sesión</a>
+							</li>
+						</ul>
+						
+						<form class="navbar-form navbar-right" role="search">
+							<div class="form-group">
+								<input class="form-control" type="text" placeholder="Búsqueda">
+							</div> 
+							<button type="submit" class="btn btn-default">
+								Buscar
+							</button>
+
+						</form>
+						
+					</div>
+					
+				</nav>
+				<div class="row content">
+		  			<div class="col-sm-12">
+						<div id="logo" >
+							<a href="inicio"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
+						</div>
+					</div>
+				</div>
+				<h1 class="text-center">
+					Artículos por Publicar
+				</h1>
+				<div class="btn-group" style="float: right;">				 
+					<button class="btn btn-default">
+						Ordenar por
+					</button> 
+					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#">Hora</a>
+						</li>
+						<li>
+							<a href="#">Fecha</a>
+						</li>
+					</ul>
+				</div>
+				<div class="row">
+					<div id="posts"></div>
+				</div>
+				<div class="text-center">
+					<ul  class="pagination">
+						<li>
+							<a href="#"><</a>
+						</li>
+						<li>
+							<a href="#">1</a>
+						</li>
+						<li>
+							<a href="#">2</a>
+						</li>
+						<li>
+							<a href="#">3</a>
+						</li>
+						<li>
+							<a href="#">4</a>
+						</li>
+						<li>
+							<a href="#">5</a>
+						</li>
+						<li>
+							<a href="#">></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <script src="../static/vendor/js/jquery.min.js"></script>
+    <script src="../static/vendor/js/bootstrap.min.js"></script>
+    <script src="../static/vendor/js/scripts.js"></script>
+    <script type="text/javascript">
+
+        var someJavaScriptVar = '{{ draftPosts }}';
+        someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"');
+        var JSON = JSON.parse(someJavaScriptVar);
+		var i = 0;
+		if (JSON.length == 0) {
+
+			var posts = document.getElementById('posts');
+			posts.innerHTML = posts.innerHTML + '<p style="margin-left:1%"><strong>No se han encontrado artículos por publicar.</strong></p></br>';
+
+		} else {
+
+			for (i = 0; i<JSON.length; i++) {
+
+				var id = JSON[i]._id.$oid;
+				var titulo = JSON[i].titulo;
+				var nombre = JSON[i].nombre;
+				var fecha = JSON[i].fecha;
+				var resumen = JSON[i].resumen;
+				var imagen = JSON[i].imagen;
+				var posts = document.getElementById('posts');
+
+				posts.innerHTML = posts.innerHTML + '<div class="col-md-10"></br></br>\
+															<div class="media">\
+																 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>\
+																<div class="media-body">\
+																	<h4 class="media-heading">\
+																		'+titulo+'\
+																	</h4>\
+																	<h4 class="media-heading">\
+																		'+nombre+'\
+																	</h4>\
+																	<h5 class="media-heading">\
+																		'+fecha+'\
+																	</h5>'+resumen+'\
+																</div>\
+															</div>\
+														</div>\
+														<div class="col-md-2"></br>\
+															 <span><a href="edit?id='+id+'"><button class="btn btn-default">Editar</button></a></span></br></br>\
+															 <span><a href="publish?id='+id+'"><button class="btn btn-default">Publicar</button></a></span></br></br>\
+															 <span><a href="delete?id='+id+'"><button class="btn btn-danger">Eliminar</button></a></span>\
+														</div>';   
+
+			}
+
+		}
+
+    </script>
+    <script type="text/javascript">
+
+    	$(function () {
+            $('#modal-published').modal('toggle');
+            $('#modal-deleted').modal('toggle');
+        });
+
+    </script>
+  </body>
+</html>

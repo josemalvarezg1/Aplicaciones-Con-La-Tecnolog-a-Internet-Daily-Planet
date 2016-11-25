@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Crear Artículo</title>
+
+    <link href="../static/vendor/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/vendor/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="all" href="../static/vendor/css/jquery-ui.css"/>
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="navbar-header">
+					 
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+					</button> <a class="navbar-brand" href="#">Inicio</a>
+				</div>
+				
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li>
+							<a href="#">Crear Artículo</a>
+						</li>
+						<li>
+							<a href="#">Artículos por Publicar</a>
+						</li>
+						<li>
+							<a href="#">Artículos Favoritos</a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active">
+							<a href="#">Perfil</a>
+						</li>
+						<li>
+							<a href="#">Cerrar Sesión</a>
+						</li>
+					</ul>
+					
+					<form class="navbar-form navbar-right" role="search">
+						<div class="form-group">
+							<input class="form-control" type="text" placeholder="Búsqueda">
+						</div> 
+						<button type="submit" class="btn btn-default">
+							Buscar
+						</button>
+
+					</form>
+					
+				</div>
+				
+			</nav>
+			<div class="row content">
+	  			<div class="col-sm-12">
+					<div id="logo" >
+						<a href="#"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
+					</div>
+				</div>
+			</div>
+			<h1 class="text-center">
+				Editar Perfil<br>
+			</h1>
+			<div class="container">
+
+				<div class="row">
+	                <form id="form-login" action="#" method="post" >
+		                <div class="row">
+			                <div class="col-md-6">
+			                    <label for="nombre">Nombre:</label>
+		                        <input name="nombre" type="text" id="nombre" class="form-control" placeholder="Nombres" autofocus=""/ ><br>
+			 
+			                    <label for="correo">Correo Electrónico:</label>
+		                        <input name="correo" type="email" id="correo" class="form-control" placeholder="Correo Electrónico" /><br>
+
+								<label class="control-label col-sm-2" for="resumen">Imagen:</label>
+								<img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"><br>
+								<input type="file" name="pic" accept="image/*"><br>
+		                    </div>
+
+		                	<div class="col-md-6">
+		                		<label for="apellido">Apellido:</label><br>
+		                        <input name="apellido" type="text" id="apellido" class="form-control" placeholder="Apellido" /><br>
+
+		                        <label for="apellido">Fecha de Nacimiento:</label>
+		                        <input type="text" id="datepicker" class="form-control"><br>
+
+		                        <label for="pais">País:</label>
+		                        <select class="form-control" id="sel1"><br>
+								    <option>Argentina</option>
+								    <option>Bolivia</option>
+								    <option>Chile</option>
+								    <option>Colombia</option>
+								    <option>Ecuador</option>
+								    <option>Paraguay</option>
+								    <option>Perú</option>
+								    <option>Uruguay</option>
+								    <option>Venezuela</option>
+								</select>
+			 
+			                    
+
+		 					</div>
+
+		 				</div>
+		 				<label for="descripcion">Descripción:</label>
+						<textarea class="form-control" id="resumen" placeholder="Descripción" rows="3"></textarea><br>
+
+						<div class="row">
+			                <div class="col-md-6">
+
+								<label for="pass">Contraseña:</label>
+			                    <input name="pass" type="password" id="pass" class="form-control" placeholder="Contraseña"/ ></p>
+							</div>
+							<div class="col-md-6">
+								<label for="repass">Nueva Contraseña:</label>
+		                        <input name="repass" type="password" id="repass" class="form-control" placeholder="Nueva Contraseña" /></p>
+							</div>
+						</div>
+					</form>
+				</div><br>
+				<div class="text-center">
+					<button class="btn btn-success">Guardar</button>
+		 			<button class="btn btn-danger">Cancelar</button>
+		 		</div><br>
+            </div>
+        </div>
+	</div>
+</div>
+
+    <script src="../static/vendor/js/jquery.min.js"></script>
+    <script src="../static/vendor/js/jquery-ui.min.js"></script>    
+    <script src="../static/vendor/js/bootstrap.min.js"></script>
+    <script src="../static/vendor/js/scripts.js"></script>
+    <script type="text/javascript">   
+
+		$.datepicker.regional['es'] = {
+		closeText: 'Cerrar',
+		prevText: '<Ant',
+		nextText: 'Sig>',
+		currentText: 'Hoy',
+		monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		weekHeader: 'Sm',
+		dateFormat: 'dd/mm/yy',
+		firstDay: 1,
+		isRTL: false,
+		showMonthAfterYear: false,
+		yearSuffix: ''
+		};
+		$.datepicker.setDefaults($.datepicker.regional['es']);
+
+		$(function () {
+            $('#datepicker').datepicker();
+        });
+
+    </script>
+    <style type="text/css">
+    	.ui-widget-content .ui-icon {
+	    background-image: url("../static/imagenes/css_images_ui-icons_222222_256x240.png")      
+	    !important;}
+	    .ui-widget-header .ui-icon {
+	    background-image: url("../static/imagenes/css_images_ui-icons_222222_256x240.png")   
+	    !important;}
+
+    </style>
+  </body>
+</html>
