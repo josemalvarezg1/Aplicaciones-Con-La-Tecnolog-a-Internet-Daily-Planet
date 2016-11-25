@@ -118,7 +118,11 @@ def editar():
 	nombreCompleto = nombre+" "+apellido
 	titulo = request.form.get('titulo')
 	resumen = request.form.get('resumen')
-	imagen = request.form.get('pic')
+	file = request.files['pic']
+	if file:
+		filename = secure_filename(file.filename)
+		imagen = filename
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 	clave = request.form.get('clave')
 	contenido = request.form.get('contenido')
 	posts.update_one({"_id": ObjectId(request.form.get('id_post'))}, {"$set": {"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido}}, upsert=False)
@@ -130,18 +134,22 @@ def editar():
 @app.route('/crear', methods=['POST'])
 def crear():
 	username = session['name']
-	titulo = request.form['titulo']
-	resumen  = request.form['resumen']
-	imagen = request.form['pic']
-	clave = request.form['clave']
-	contenido = request.form['contenido']
+	titulo = request.form.get('titulo')
+	resumen  = request.form.get('resumen')
+	file = request.files['pic']
+	if file:
+		filename = secure_filename(file.filename)
+		avatar = filename
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+	clave = request.form.get('clave')
+	contenido = request.form.get('contenido')
 	user = users.find_one({ "correo": username })
 	nombre = user["nombre"]
 	apellido = user["apellido"]
 	nombreCompleto = nombre+" "+apellido
 	fechaPublic = time.strftime("%d/%m/%Y")
 	publicado = 0
-	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado})
+	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": avatar, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado})
 	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
 	return render_template('articulosPorPublicar.html', user = session['name'], created = "true", draftPosts = json.dumps(draftPosts, default=json_util.default))
 
@@ -175,9 +183,9 @@ def article():
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
-	#Debo pasarle allComents solo del articulo en donde estoy
+	imagen = articulo["imagen"]
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/articuloNS', methods=['GET'])
 def articleNS():
@@ -190,9 +198,9 @@ def articleNS():
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
-	#Debo pasarle allComents solo del articulo en donde estoy
-	allComents = list(comments.find())
-	return render_template('articuloXNoSesion.html', user = "false", titulo = titulo, nombre = nombre, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	imagen = articulo["imagen"]
+	allComents = list(comments.find({"id_article": articulo}))
+	return render_template('articuloXNoSesion.html', user = "false", titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/comment', methods=['POST'])
 def comment():
@@ -254,6 +262,16 @@ def updateProfile():
 	descripcion = user['descripcion']
 	password = user['pass']
 	return render_template('editarPerfil.html', updated = "true", nombre = nombre, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
+
+@app.route('/favorites')
+def favorites():
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 1}))
+	return render_template('articulosFavoritos.html', user = session['name'], draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 if __name__ == '__main__':
 	app.debug = True

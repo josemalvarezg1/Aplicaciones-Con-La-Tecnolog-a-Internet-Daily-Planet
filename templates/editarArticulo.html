@@ -34,7 +34,7 @@
 							<a href="draft">Artículos por Publicar</a>
 						</li>
 						<li>
-							<a href="#">Artículos Favoritos</a>
+							<a href="favorites">Artículos Favoritos</a>
 						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
@@ -72,7 +72,7 @@
 			<div class="container">
 				<div class="row">
 				
-	                <form role="form" action="editar" method="POST">
+	                <form role="form" action="editar" method="POST" enctype="multipart/form-data">
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="titulo">Título:</label>
 								<input type="text" class="form-control" name="titulo" placeholder="Título" value='{{titulo}}' required="true">
@@ -83,7 +83,7 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="resumen">Imagen:</label>
-								<img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object">
+								<img src="../static/imagenes/{{imagen}}" class="media-object" style="max-height: 128px; max-width: 128px">
 							<input type="file" name="pic" accept="image/*" required="true"><br>
 						</div>
 						<div class="form-group">
@@ -97,7 +97,7 @@
 						<input type="hidden" id="id_post" name="id_post"></br>
 						<div class="text-center">
 							<button type="submit" class="btn btn-success">Guardar</button>
-				 			<button class="btn btn-danger">Cancelar</button>
+				 			<a href="draft"><button class="btn btn-danger">Cancelar</button></a>
 				 		</div><br>
 					</form>
 				</div>

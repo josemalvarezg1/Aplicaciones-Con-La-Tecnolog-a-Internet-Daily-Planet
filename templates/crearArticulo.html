@@ -33,7 +33,7 @@
 							<a href="draft">Artículos por Publicar</a>
 						</li>
 						<li>
-							<a href="#">Artículos Favoritos</a>
+							<a href="favorites">Artículos Favoritos</a>
 						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
@@ -71,7 +71,7 @@
 			<div class="container">
 
 				<div class="row">
-	                <form class="form-signin" action="crear" method="POST">
+	                <form class="form-signin" action="crear" method="POST" enctype="multipart/form-data">
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="titulo">Título:</label>
 								<input type="text" class="form-control" name="titulo"  placeholder="Título" required="true" autocomplete="off">
@@ -82,7 +82,7 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="resumen">Imagen:</label>
-								<img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object">
+								<img src="http://lorempixel.com/128/128/" class="media-object">
 							<input type="file" name="pic" accept="image/*" required="true" autocomplete="off"><br>
 						</div>
 						<div class="form-group">
