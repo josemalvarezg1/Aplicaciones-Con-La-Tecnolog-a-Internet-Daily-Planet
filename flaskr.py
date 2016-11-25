@@ -206,6 +206,52 @@ def comment():
 	allComents = list(comments.find())
 	return render_template('articuloX.html', user = username, allComents = json.dumps(allComents, default=json_util.default))
 
+@app.route('/profile')
+def profile():
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	correo = user['correo']
+	fechaNac = user['fechaNac']
+	avatar = user['avatar']
+	#filename = secure_filename(avatar.filename)
+	#avatar.save(os.path.join("hola/", filename))
+	pais = user['pais']
+	tipo = user['tipo']
+	descripcion = user['descripcion']
+	password = user['pass']
+	return render_template('editarPerfil.html', nombre = nombre, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
+
+@app.route('/updateProfile', methods=['POST'])
+def updateProfile():
+	username = session['name']
+	nombre = request.form['nombre']
+	apellido  = request.form['apellido']
+	correo = request.form['correo']
+	fechaNac = request.form['fechaNac']
+	avatar = request.form['pic']
+	#filename = secure_filename(avatar.filename)
+	#avatar.save(os.path.join("hola/", filename))
+	pais = request.form['pais']
+	descripcion = request.form['descripcion']
+	password = request.form['password2']
+	users.update_one({"correo": username}, {"$set": {"nombre": nombre, "apellido": apellido, "correo": correo, "fechaNac": fechaNac, "avatar": avatar, "pais": pais, "descripcion": descripcion, "pass": password}}, upsert=False)
+	session['name'] = correo
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	correo = user['correo']
+	fechaNac = user['fechaNac']
+	avatar = user['avatar']
+	#filename = secure_filename(avatar.filename)
+	#avatar.save(os.path.join("hola/", filename))
+	pais = user['pais']
+	tipo = user['tipo']
+	descripcion = user['descripcion']
+	password = user['pass']
+	return render_template('editarPerfil.html', updated = "true", nombre = nombre, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
 
 if __name__ == '__main__':
 	app.debug = True

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Crear Artículo</title>
+    <title>Editar Perfil</title>
 
     <link href="../static/vendor/css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/vendor/css/style.css" rel="stylesheet">
@@ -16,22 +16,53 @@
 
     <div class="container-fluid">
 	<div class="row">
+
+		{% if updated %}
+
+			<div class="modal fade" id="modal-updated" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							 
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								×
+							</button>
+							<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+								Perfil Actualizado
+							</h4>
+						</div>
+						<div class="modal-body">	
+							<p style="text-align: center;">Perfil actualizado exitosamente.</p>
+							<div class="modal-footer" style="text-align: center;">							 
+								<button type="button" class="btn btn-primary" data-dismiss="modal">
+									Aceptar
+								</button>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+
+		{% endif %}
+
 		<div class="col-md-12">
 			<nav class="navbar navbar-default" role="navigation">
 				<div class="navbar-header">
 					 
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 						 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-					</button> <a class="navbar-brand" href="#">Inicio</a>
+					</button> <a class="navbar-brand" href="inicio">Inicio</a>
 				</div>
 				
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
 						<li>
-							<a href="#">Crear Artículo</a>
+							<a href="create">Crear Artículo</a>
 						</li>
 						<li>
-							<a href="#">Artículos por Publicar</a>
+							<a href="draft">Artículos por Publicar</a>
 						</li>
 						<li>
 							<a href="#">Artículos Favoritos</a>
@@ -39,10 +70,10 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li class="active">
-							<a href="#">Perfil</a>
+							<a href="profile">Perfil</a>
 						</li>
 						<li>
-							<a href="#">Cerrar Sesión</a>
+							<a href="logout">Cerrar Sesión</a>
 						</li>
 					</ul>
 					
@@ -62,7 +93,7 @@
 			<div class="row content">
 	  			<div class="col-sm-12">
 					<div id="logo" >
-						<a href="#"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
+						<a href="inicio"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
 					</div>
 				</div>
 			</div>
@@ -72,29 +103,29 @@
 			<div class="container">
 
 				<div class="row">
-	                <form id="form-login" action="#" method="post" >
+	                <form id="form-login" action="updateProfile" method="POST" >
 		                <div class="row">
 			                <div class="col-md-6">
 			                    <label for="nombre">Nombre:</label>
-		                        <input name="nombre" type="text" id="nombre" class="form-control" placeholder="Nombres" autofocus=""/ ><br>
+		                        <input name="nombre" type="text" name="nombre" class="form-control" placeholder="Nombre" autofocus="" required="true" autocomplete="off" value="{{nombre}}"/><br>
 			 
 			                    <label for="correo">Correo Electrónico:</label>
-		                        <input name="correo" type="email" id="correo" class="form-control" placeholder="Correo Electrónico" /><br>
+		                        <input name="correo" type="email" name="correo" class="form-control" placeholder="Correo Electrónico" required="true" autocomplete="off" value="{{correo}}"/><br>
 
 								<label class="control-label col-sm-2" for="resumen">Imagen:</label>
 								<img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"><br>
-								<input type="file" name="pic" accept="image/*"><br>
+								<input type="file" name="pic" accept="image/*" required="true" autocomplete="off" value="{{avatar}}"><br>
 		                    </div>
 
 		                	<div class="col-md-6">
 		                		<label for="apellido">Apellido:</label><br>
-		                        <input name="apellido" type="text" id="apellido" class="form-control" placeholder="Apellido" /><br>
+		                        <input name="apellido" type="text" name="apellido" class="form-control" placeholder="Apellido" required="true" autocomplete="off" value="{{apellido}}"/><br>
 
 		                        <label for="apellido">Fecha de Nacimiento:</label>
-		                        <input type="text" id="datepicker" class="form-control"><br>
+		                        <input type="text" id="datepicker" name="fechaNac" class="form-control" required="true" autocomplete="off" value="{{fechaNac}}"><br>
 
 		                        <label for="pais">País:</label>
-		                        <select class="form-control" id="sel1"><br>
+		                        <select class="form-control" id="pais" name="pais" autocomplete="off"/><br>
 								    <option>Argentina</option>
 								    <option>Bolivia</option>
 								    <option>Chile</option>
@@ -104,33 +135,31 @@
 								    <option>Perú</option>
 								    <option>Uruguay</option>
 								    <option>Venezuela</option>
-								</select>
-			 
-			                    
-
+								</select>			 
 		 					</div>
 
 		 				</div>
 		 				<label for="descripcion">Descripción:</label>
-						<textarea class="form-control" id="resumen" placeholder="Descripción" rows="3"></textarea><br>
+						<textarea class="form-control" name="descripcion" placeholder="Descripción" rows="3" required="true" autocomplete="off">{{descripcion}}</textarea><br>
 
 						<div class="row">
 			                <div class="col-md-6">
 
-								<label for="pass">Contraseña:</label>
-			                    <input name="pass" type="password" id="pass" class="form-control" placeholder="Contraseña"/ ></p>
+								<label for="pass">Contraseña Actual:</label>
+			                    <input type="password" name="password1" class="form-control" placeholder="Contraseña Actual" required="true" autocomplete="off" value="{{password}}"/></p>
 							</div>
 							<div class="col-md-6">
 								<label for="repass">Nueva Contraseña:</label>
-		                        <input name="repass" type="password" id="repass" class="form-control" placeholder="Nueva Contraseña" /></p>
+		                        <input type="password" name="password2" class="form-control" placeholder="Nueva Contraseña" required="true" autocomplete="off"/></p>
 							</div>
 						</div>
+						<div class="text-center">
+							<button type="submit" class="btn btn-success">Guardar</button>
+				 			<a href="inicio"><button class="btn btn-danger">Cancelar</button></a>
+				 		</div><br>
 					</form>
 				</div><br>
-				<div class="text-center">
-					<button class="btn btn-success">Guardar</button>
-		 			<button class="btn btn-danger">Cancelar</button>
-		 		</div><br>
+				
             </div>
         </div>
 	</div>
@@ -163,6 +192,8 @@
 
 		$(function () {
             $('#datepicker').datepicker();
+            $('#modal-updated').modal('toggle');
+            $("#pais").val('{{pais}}');
         });
 
     </script>
