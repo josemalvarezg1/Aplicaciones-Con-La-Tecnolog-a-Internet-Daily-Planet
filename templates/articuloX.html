@@ -26,6 +26,7 @@
 
     <div class="container-fluid">
 	<div class="row">
+
 		<div class="col-md-12">
 			<nav class="navbar navbar-default" role="navigation">
 				<div class="navbar-header">
@@ -87,6 +88,11 @@
 					<a href="#"><img src="../static/imagenes/facebook_logo.png" width="30px" height="30px"></a>
 					<a href="#"><img src="../static/imagenes/twitter_logo.png" width="30px" height="30px"></a>
 					<a href="#"><img src="../static/imagenes/google_logo.png" width="30px" height="30px"></a>
+					{% if isFavorite == "false" %}
+						<a href="addFavorite?id={{id_article}}"><button class="btn btn-success">Añadir a Favoritos</button></a>
+					{% else %}
+						<a href="removeFavorite?id={{id_article}}"><button class="btn btn-danger">Eliminar de Favoritos</button></a>
+					{% endif %}	
 					</br></br>
 					<strong>Autor:</strong> {{nombre}}</br>
 					<strong>Editores:</strong> {{editores}}</br>
