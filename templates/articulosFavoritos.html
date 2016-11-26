@@ -85,96 +85,7 @@
 				</ul>
 			</div>
 			<div class="row">
-				<div class="col-md-10"></br></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span></br></br>
-					 <span><button class="btn btn-danger">Eliminar</button></span>
-				</div>
-				<div class="col-md-10"></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span></br></br>
-					 <span><button class="btn btn-danger">Eliminar</button></span>
-				</div>
-				<div class="col-md-10"></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span></br></br>
-					 <span><button class="btn btn-danger">Eliminar</button></span>
-				</div>
-				<div class="col-md-10"></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span></br></br>
-					 <span><button class="btn btn-danger">Eliminar</button></span>
-				</div>
-				<div class="col-md-10"></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span></br></br>
-					 <span><button class="btn btn-danger">Eliminar</button></span>
-				</div>
+				<div id="posts"></div>
 			</div>
 			<div class="text-center">
 				<ul  class="pagination">
@@ -208,5 +119,52 @@
     <script src="../static/vendor/js/jquery.min.js"></script>
     <script src="../static/vendor/js/bootstrap.min.js"></script>
     <script src="../static/vendor/js/scripts.js"></script>
+    <script type="text/javascript">
+
+        var someJavaScriptVar = '{{ thosePosts }}';
+        someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"');
+        var JSON = JSON.parse(someJavaScriptVar);
+		var i = 0;
+		if (JSON.length == 0) {
+
+			var posts = document.getElementById('posts');
+			posts.innerHTML = posts.innerHTML + '<p style="margin-left:1%"><strong>No se han encontrado artículos favoritos.</strong></p></br>';
+
+		} else {
+
+			for (i = 0; i<JSON.length; i++) {
+
+				var id = JSON[i]._id.$oid;
+				var titulo = JSON[i].titulo;
+				var nombre = JSON[i].nombre;
+				var fecha = JSON[i].fecha;
+				var resumen = JSON[i].resumen;
+				var imagen = JSON[i].imagen;
+				var posts = document.getElementById('posts');
+
+				posts.innerHTML = posts.innerHTML + '<div class="col-md-10"></br></br>\
+															<div class="media">\
+																 <a href="#" class="pull-left"><img src="../static/imagenes/'+imagen+'" style="max-height: 128px; max-width: 128px" class="media-object"></a>\
+																<div class="media-body">\
+																	<h4 class="media-heading">\
+																		<a href="articulo?id='+id+'">'+titulo+'</a>\
+																	</h4>\
+																	<h4 class="media-heading">\
+																		'+nombre+'\
+																	</h4>'+resumen+'\
+																</div>\
+															</div>\
+														</div>\
+														<div class="col-md-2"></br>\
+															 <span class="label label-default">Fecha de Publicación: '+fecha+'</span></br></br>\
+															 <span class="label label-default">Editores: Alvarez, Rodriguez</span></br></br>\
+															 <a href="removeFavoriteList?id='+id+'"><button class="btn btn-danger">Eliminar</button></a>\
+														</div>';   
+
+			}
+
+		}
+
+    </script>
   </body>
 </html>

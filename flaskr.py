@@ -87,12 +87,17 @@ def delete():
 	user = users.find_one({ "correo": username })
 	nombre = user["nombre"]
 	apellido = user["apellido"]
+	titulo = ""
 	nombreCompleto = nombre+" "+apellido
 	postEliminado = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
 	posts.remove({"_id": ObjectId(request.args.get('id'))})
-	titulo = postEliminado["titulo"]
+	if postEliminado:
+		titulo = postEliminado["titulo"]
+		draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+		return render_template('articulosPorPublicar.html', user = session['name'], deleted = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
 	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
-	return render_template('articulosPorPublicar.html', user = session['name'], deleted = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+	return render_template('articulosPorPublicar.html', user = session['name'], draftPosts = json.dumps(draftPosts, default=json_util.default))
+
 
 @app.route('/edit')
 def edit():
@@ -187,7 +192,7 @@ def article():
 	contenido = articulo["contenido"]
 	imagen = articulo["imagen"]
 	isFavorite = "false"
-	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": request.args.get('id')}}}):
+	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	allComents = list(comments.find({"id_article": articulo}))
 	return render_template('articuloX.html', user = username, isFavorite = isFavorite, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
@@ -223,7 +228,7 @@ def comment():
 	imagen = articulo["imagen"]
 	avatar = user["avatar"]
 	isFavorite = "false"
-	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": request.args.get('id')}}}):
+	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	fechaPublic = time.strftime("%d/%m/%Y")
 	content = request.form.get('content')
@@ -249,9 +254,9 @@ def addFavorite():
 	avatar = user["avatar"]
 	fechaPublic = time.strftime("%d/%m/%Y")
 	content = request.form.get('content')
-	users.update_one({"correo": username}, {"$push": {"favoritos": request.args.get('id')}})
+	users.update_one({"correo": username}, {"$push": {"favoritos": ObjectId(request.args.get('id'))}})
 	isFavorite = "false"
-	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": request.args.get('id')}}}):
+	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	allComents = list(comments.find({"id_article": articulo}))
 	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'),  titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
@@ -275,7 +280,7 @@ def removeFavorite():
 	avatar = user["avatar"]
 	fechaPublic = time.strftime("%d/%m/%Y")
 	content = request.form.get('content')
-	users.update_one({"correo": username}, {"$pull": {"favoritos": request.args.get('id')}})
+	users.update_one({"correo": username}, {"$pull": {"favoritos": ObjectId(request.args.get('id'))}})
 	isFavorite = "false"
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": request.args.get('id')}}}):
 		isFavorite = "true"	
@@ -334,11 +339,22 @@ def favorites():
 	nombre = user["nombre"]
 	apellido = user["apellido"]
 	nombreCompleto = nombre+" "+apellido
-	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 1}))
-	return render_template('articulosFavoritos.html', user = session['name'], draftPosts = json.dumps(draftPosts, default=json_util.default))
+	favoritePosts = user["favoritos"]
+	thosePosts = list(posts.find({"_id": {"$in":favoritePosts}}))
+	return render_template('articulosFavoritos.html', user = session['name'], thosePosts = json.dumps(thosePosts, default=json_util.default))
+
+@app.route('/removeFavoriteList')
+def removeFavoriteList():
+	username = session['name']	
+	users.update_one({"correo": username}, {"$pull": {"favoritos": ObjectId(request.args.get('id'))}})
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	favoritePosts = user["favoritos"]
+	thosePosts = list(posts.find({"_id": {"$in":favoritePosts}}))
+	return render_template('articulosFavoritos.html', user = session['name'], thosePosts = json.dumps(thosePosts, default=json_util.default))
 
 if __name__ == '__main__':
 	app.debug = True
-	app.run()
-
-
+	app.run(host='192.168.0.104', port=5000)
