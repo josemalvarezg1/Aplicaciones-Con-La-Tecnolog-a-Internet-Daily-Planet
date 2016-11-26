@@ -215,6 +215,7 @@
 
         var someJavaScriptVar = '{{ draftPosts }}';
         someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"');
+        someJavaScriptVar = someJavaScriptVar.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
         var JSON = JSON.parse(someJavaScriptVar);
 		var i = 0;
 		if (JSON.length == 0) {
@@ -231,6 +232,7 @@
 				var nombre = JSON[i].nombre;
 				var fecha = JSON[i].fecha;
 				var resumen = JSON[i].resumen;
+				resumen = resumen.replace(/\\r\\n/g, "<br/>");
 				var imagen = JSON[i].imagen;
 				var posts = document.getElementById('posts');
 

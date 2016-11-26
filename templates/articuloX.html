@@ -124,6 +124,7 @@
 
         var someJavaScriptVar = '{{ allComents }}';
         someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"');
+        someJavaScriptVar = someJavaScriptVar.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
         var JSON = JSON.parse(someJavaScriptVar);
 		var i = 0;
 		if (JSON.length == 0) {
@@ -136,6 +137,7 @@
 			for (i = 0; i<JSON.length; i++) {
 
 				var contenido = JSON[i].contenido;
+				contenido = contenido.replace(/\\r\\n/g, "<br/>");
 				var nombre = JSON[i].nombre;
 				var fecha = JSON[i].fecha;
 				var imagen = JSON[i].avatar;
