@@ -355,6 +355,15 @@ def removeFavoriteList():
 	thosePosts = list(posts.find({"_id": {"$in":favoritePosts}}))
 	return render_template('articulosFavoritos.html', user = session['name'], thosePosts = json.dumps(thosePosts, default=json_util.default))
 
+@app.route('/search', methods=['POST'])
+def search():
+	username = session['name']	
+	user = users.find_one({ "correo": username })
+	buscar  = request.form.get('buscar')
+	print(buscar)
+	thosePosts = list(posts.find({"clave": {"$regex": buscar}, "publicado": 1}))
+	return render_template('articulosBuscados.html', user = session['name'], thosePosts = json.dumps(thosePosts, default=json_util.default))
+
 if __name__ == '__main__':
 	app.debug = True
-	app.run(host='192.168.0.104', port=5000)
+	app.run()

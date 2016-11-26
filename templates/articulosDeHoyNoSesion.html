@@ -32,103 +32,100 @@
 						</div>
 						<div class="modal-body">							
 							<form role="form" action="register" method="POST" enctype="multipart/form-data">
-								<div class="form-group">									 
-									<label for="exampleInputEmail1">
-										Nombre
-									</label>
-									<input class="form-control" name="nombre" type="text" required="true" autocomplete="off"/>
-								</div>
-								<div class="form-group">									 
-									<label for="exampleInputEmail1">
-										Apellido
-									</label>
-									<input class="form-control" name="apellido" type="text" required="true" autocomplete="off"/>
-								</div>
-								<div class="form-group">									 
-									<label for="exampleInputEmail1">
-										Correo
-									</label>
-									<input class="form-control" name="correo" type="email" required="true" autocomplete="off"/>
-								</div>
-								<div class="form-group">									 
-									<label for="exampleInputEmail1">
-										Fecha de Nacimiento
-									</label>
-					                <input type='text' id="date" name="fechaNac" class="form-control" required="true" autocomplete="off"/>
-								</div>				
-								<div class="form-group">									 
-									<label for="exampleInputFile">
-										Avatar
-									</label>
-									<input name="avatar" type="file" required="true" autocomplete="off"/>
-								</div>
-								<div class="form-group">									 
-									<label for="exampleInputEmail1">
-										País
-									</label>
-									<select class="form-control" name="pais" autocomplete="off"/>
-										<option>Argentina</option>
-										<option>Bolivia</option>
-										<option>Brasil</option>
-										<option>Chile</option>
-										<option>Colombia</option>
-										<option>Ecuador</option>
-										<option>España</option>
-										<option>Estados Unidos</option>
-										<option>Francia</option>
-										<option>Paraguay</option>
-										<option>Peru</option>
-										<option>Portugal</option>
-										<option>Uruguay</option>
-										<option>Venezuela</option>
-										<option>Otro</option>
-									</select>
-								</div>
-								<div class="form-group">									 
-									<label for="exampleInputEmail1">
-										Tipo de Usuario
-									</label>
-									<select class="form-control" name="tipo" autocomplete="off"/>
-										<option>Lector</option>
-										<option>Editor</option>
-										<option>Autor</option>
-									</select>
-								</div>
-								<div class="form-group">									 
-									<label for="exampleInputEmail1">
-										Descripción
-									</label>
-									<textarea class="form-control" name="descripcion" required="true" autocomplete="off"/></textarea>
-								</div>
-								<div class="form-group">									 
-									<label for="exampleInputPassword1">
-										Contraseña
-									</label>
-									<input class="form-control" name="password1" type="password" required="true" autocomplete="off" oninput="password2.pattern = escapeRegExp(this.value)"/>
-								</div>
-								<div class="form-group">									 
-									<label for="exampleInputPassword1">
-										Repita Contraseña
-									</label>
-									<input class="form-control" name="password2" type="password" required="true" autocomplete="off" pattern="" title="Las contraseñas deben coincidir"/>
-								</div>
-								<div style="text-align: center;">
-									<div class="checkbox">									 
-										<label>
-											<input type="checkbox" required="true" autocomplete="off"/> He leído y acepto los <a href="#">Términos y Condiciones</a>
-										</label>
+									<div class="col-md-6">									 
+										<label for="exampleInputEmail1">Nombre:</label>
+										<input class="form-control" name="nombre" type="text" required="true" autocomplete="off"/><br>
+									
+										<label for="exampleInputEmail1">Correo:</label>
+										<input class="form-control" name="correo" type="email" required="true" autocomplete="off"/><br>
+
 									</div>
-								</div> 
-								<div class="modal-footer" style="text-align: center;">							 
-									<button type="submit" class="btn btn-primary">
-										Aceptar
-									</button>
-									<button type="button" class="btn btn-default" data-dismiss="modal">
-										Cancelar
-									</button> 
-								</div>
-								
-							</form>
+
+									<div class="col-md-6">									 
+										<label for="exampleInputEmail1">
+											Apellido
+										</label>
+										<input class="form-control" name="apellido" type="text" required="true" autocomplete="off"/><br>
+
+										<label for="exampleInputEmail1">
+											Fecha de Nacimiento
+										</label>
+						                <input type='text' id="date" name="fechaNac" class="form-control" required="true" autocomplete="off"/><br>				
+									</div>
+
+									<div class="col-md-12">
+										<label for="exampleInputFile">Avatar:</label>
+										<input name="avatar" type="file" required="true" autocomplete="off"/><br>
+									</div>
+
+									<div class="col-md-6">
+										<label for="exampleInputEmail1">
+											País
+										</label>
+										<select class="form-control" name="pais" autocomplete="off"/>
+											<option>Argentina</option>
+											<option>Bolivia</option>
+											<option>Brasil</option>
+											<option>Chile</option>
+											<option>Colombia</option>
+											<option>Ecuador</option>
+											<option>España</option>
+											<option>Estados Unidos</option>
+											<option>Francia</option>
+											<option>Paraguay</option>
+											<option>Peru</option>
+											<option>Portugal</option>
+											<option>Uruguay</option>
+											<option>Venezuela</option>
+											<option>Otro</option>
+										</select><br>									 
+									</div>
+
+									<div class="col-md-6">
+										<label for="exampleInputEmail1">
+											Tipo de Usuario
+										</label>
+										<select class="form-control" name="tipo" autocomplete="off"/>
+											<option>Lector</option>
+											<option>Editor</option>
+											<option>Autor</option>
+										</select><br>
+									</div>
+
+									<div class="col-md-12">
+										<label for="exampleInputEmail1">Descripción</label>
+										<textarea class="form-control" name="descripcion" required="true" autocomplete="off"/></textarea><br>
+									</div>
+										
+									<div class="col-md-6">									 
+										<label for="exampleInputPassword1">
+											Contraseña
+										</label>
+										<input class="form-control" name="password1" type="password" required="true" autocomplete="off" oninput="password2.pattern = escapeRegExp(this.value)"/>
+									</div>
+									<div class="col-md-6">									 
+										<label for="exampleInputPassword1">
+											Repita Contraseña
+										</label>
+										<input class="form-control" name="password2" type="password" required="true" autocomplete="off" pattern="" title="Las contraseñas deben coincidir"/>
+									</div>
+									<div style="text-align: center;">
+										<div class="checkbox">									 
+											<label>
+												<input type="checkbox" required="true" autocomplete="off"/> He leído y acepto los <a href="#">Términos y Condiciones</a>
+											</label>
+										</div>
+									</div> 
+									<div class="modal-footer" style="text-align: center;">							 
+										<button type="submit" class="btn btn-primary">
+											Aceptar
+										</button>
+										<button type="button" class="btn btn-default" data-dismiss="modal">
+											Cancelar
+										</button> 
+									</div>
+									
+								</form>
 						</div>
 					</div>
 					

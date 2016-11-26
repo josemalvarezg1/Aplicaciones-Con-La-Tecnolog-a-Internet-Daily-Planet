@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Daily Planet - Artículos Favoritos</title>
+    <title>Daily Planet - Búsqueda</title>
     <link rel='shortcut icon' type='image/x-icon' href='../static/imagenes/favicon.ico'/>
 
     <link href="../static/vendor/css/bootstrap.min.css" rel="stylesheet">
@@ -33,7 +33,7 @@
 						<li>
 							<a href="draft">Artículos por Publicar</a>
 						</li>
-						<li class="active">
+						<li>
 							<a href="favorites">Artículos Favoritos</a>
 						</li>
 					</ul>
@@ -48,7 +48,7 @@
 					
 					<form class="navbar-form navbar-right" role="search" action="search" method="POST">
 						<div class="form-group">
-							<input class="form-control" type="text" name="buscar" placeholder="Búsqueda">
+							<input class="form-control" name="buscar" type="text" placeholder="Búsqueda">
 						</div> 
 						<button type="submit" class="btn btn-default">
 							Buscar
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 			<h1 class="text-center">
-				Artículos Favoritos
+				Artículos Buscados
 			</h1>
 			<div class="btn-group" style="float: right;">				 
 				<button class="btn btn-default">
@@ -130,7 +130,7 @@
 		if (JSON.length == 0) {
 
 			var posts = document.getElementById('posts');
-			posts.innerHTML = posts.innerHTML + '<p style="margin-left:1%"><strong>No se han encontrado artículos favoritos.</strong></p></br>';
+			posts.innerHTML = posts.innerHTML + '<p style="margin-left:1%"><strong>No se han encontrado artículos.</strong></p></br>';
 
 		} else {
 
@@ -161,7 +161,6 @@
 														<div class="col-md-2"></br>\
 															 <span class="label label-default">Fecha de Publicación: '+fecha+'</span></br></br>\
 															 <span class="label label-default">Editores: Alvarez, Rodriguez</span></br></br>\
-															 <a href="removeFavoriteList?id='+id+'"><button class="btn btn-danger">Eliminar</button></a>\
 														</div>';   
 
 			}
