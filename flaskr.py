@@ -190,12 +190,13 @@ def article():
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
+	clave = articulo["clave"]
 	imagen = articulo["imagen"]
 	isFavorite = "false"
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, isFavorite = isFavorite, clave = clave, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/articuloNS', methods=['GET'])
 def articleNS():
@@ -207,9 +208,10 @@ def articleNS():
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
+	clave = articulo["clave"]
 	imagen = articulo["imagen"]
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloXNoSesion.html', user = "false", titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloXNoSesion.html', user = "false", clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/comment', methods=['POST'])
 def comment():
@@ -225,6 +227,7 @@ def comment():
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
+	clave = articulo["clave"]
 	imagen = articulo["imagen"]
 	avatar = user["avatar"]
 	isFavorite = "false"
@@ -234,7 +237,7 @@ def comment():
 	content = request.form.get('content')
 	comments.insert_one({"id_article": articulo, "nombre": nombreCompleto, "fecha": fechaPublic, "contenido": content, "avatar": avatar})
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'),  titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/addFavorite')
 def addFavorite():
@@ -250,6 +253,7 @@ def addFavorite():
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
+	clave = articulo["clave"]
 	imagen = articulo["imagen"]
 	avatar = user["avatar"]
 	fechaPublic = time.strftime("%d/%m/%Y")
@@ -259,7 +263,7 @@ def addFavorite():
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'),  titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 
 @app.route('/removeFavorite')
@@ -276,6 +280,7 @@ def removeFavorite():
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
+	clave = articulo["clave"]
 	imagen = articulo["imagen"]
 	avatar = user["avatar"]
 	fechaPublic = time.strftime("%d/%m/%Y")
@@ -285,7 +290,7 @@ def removeFavorite():
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": request.args.get('id')}}}):
 		isFavorite = "true"	
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'),  titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/profile')
 def profile():
