@@ -361,7 +361,7 @@ def search():
 	user = users.find_one({ "correo": username })
 	buscar  = request.form.get('buscar')
 	print(buscar)
-	thosePosts = list(posts.find({"clave": {"$regex": buscar}, "publicado": 1}))
+	thosePosts = list(posts.find({"$or": [{"fecha": {"$regex": buscar}},{"titulo": {"$regex": buscar}},{"nombre": {"$regex": buscar}},{"clave": {"$regex": buscar}}], "publicado": 1}))
 	return render_template('articulosBuscados.html', user = session['name'], thosePosts = json.dumps(thosePosts, default=json_util.default))
 
 if __name__ == '__main__':
