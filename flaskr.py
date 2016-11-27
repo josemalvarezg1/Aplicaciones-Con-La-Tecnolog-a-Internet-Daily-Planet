@@ -175,9 +175,12 @@ def crear():
 	nombreCompleto = nombre+" "+apellido
 	fechaPublic = time.strftime("%d/%m/%Y")
 	publicado = 0
-	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": avatar, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado, "editores": []})
+	if user["tipo"] == "Autor":	
+		posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": avatar, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado, "editores": []})
+		draftPosts = list(posts.find({"publicado": 0}))
+		return render_template('articulosPorPublicar.html', user = session['name'], created = "true", draftPosts = json.dumps(draftPosts, default=json_util.default))
 	draftPosts = list(posts.find({"publicado": 0}))
-	return render_template('articulosPorPublicar.html', user = session['name'], created = "true", draftPosts = json.dumps(draftPosts, default=json_util.default))
+	return render_template('articulosPorPublicar.html', user = session['name'], created = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/register', methods=['POST'])
 def register():
