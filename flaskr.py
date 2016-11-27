@@ -142,7 +142,16 @@ def editar():
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 	clave = request.form.get('clave')
 	contenido = request.form.get('contenido')
+	#No puedes editar un post que no es tuyo si eres Autor
+	post = posts.find_one({"_id": ObjectId(request.form.get('id_post'))})
+	if user["tipo"] == "Autor" and post["nombre"] != nombreCompleto:
+		draftPosts = list(posts.find({"publicado": 0}))
+		return render_template('articulosPorPublicar.html', user = session['name'], edited = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
 	posts.update_one({"_id": ObjectId(request.form.get('id_post'))}, {"$set": {"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido}}, upsert=False)
+	#Si ya no lo ha editado lo inserto como nuevo editor
+	post = posts.find_one({"_id": ObjectId(request.form.get('id_post'))})
+	if not posts.find_one({"_id": ObjectId(request.form.get('id_post')),"editores": {"$in": post["editores"]}}):
+		posts.update_one({"_id": ObjectId(request.form.get('id_post'))}, {"$push": {"editores": nombreCompleto}})
 	postUpdateado = posts.find_one({ "_id": ObjectId(request.form.get('id_post'))})
 	titulo = postUpdateado["titulo"]
 	draftPosts = list(posts.find({"publicado": 0}))
@@ -166,7 +175,7 @@ def crear():
 	nombreCompleto = nombre+" "+apellido
 	fechaPublic = time.strftime("%d/%m/%Y")
 	publicado = 0
-	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": avatar, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado})
+	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": avatar, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado, "editores": []})
 	draftPosts = list(posts.find({"publicado": 0}))
 	return render_template('articulosPorPublicar.html', user = session['name'], created = "true", draftPosts = json.dumps(draftPosts, default=json_util.default))
 

@@ -111,31 +111,63 @@
 
 			{% if edited %}
 
-				<div class="modal fade" id="modal-deleted" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								 
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-									×
-								</button>
-								<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
-									Artículo Editado
-								</h4>
-							</div>
-							<div class="modal-body">	
-								<p style="text-align: center;">Artículo <strong>{{titulo}}</strong> editado exitosamente.</p>
-								<div class="modal-footer" style="text-align: center;">							 
-									<button type="button" class="btn btn-primary" data-dismiss="modal">
-										Aceptar
+				{% if edited == "true" %}
+
+					<div class="modal fade" id="modal-deleted" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									 
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+										×
 									</button>
+									<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+										Artículo Editado
+									</h4>
+								</div>
+								<div class="modal-body">	
+									<p style="text-align: center;">Artículo <strong>{{titulo}}</strong> editado exitosamente.</p>
+									<div class="modal-footer" style="text-align: center;">							 
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+											Aceptar
+										</button>
+									</div>
 								</div>
 							</div>
+							
 						</div>
 						
 					</div>
-					
-				</div>
+
+				{% else %}
+
+					<div class="modal fade" id="modal-deleted" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									 
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+										×
+									</button>
+									<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+										Artículo No Editado
+									</h4>
+								</div>
+								<div class="modal-body">	
+									<p style="text-align: center;">Usted no puede editar este artículo ya que no es suyo.</p>
+									<div class="modal-footer" style="text-align: center;">							 
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+											Aceptar
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						
+					</div>
+
+				{% endif %}
 
 			{% endif %}
 
