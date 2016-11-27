@@ -266,48 +266,32 @@
 				</div>
 				<h1 class="text-center">
 					Artículos por Publicar
-				</h1>
-				<div class="btn-group" style="float: right;">				 
-					<button class="btn btn-default">
-						Ordenar por
-					</button> 
-					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="#">Hora</a>
-						</li>
-						<li>
-							<a href="#">Fecha</a>
-						</li>
-					</ul>
-				</div>
+				</h1>				
 				<div class="row">
 					<div id="posts"></div>
 				</div>
 				<div class="text-center">
 					<ul  class="pagination">
 						<li>
-							<a href="#"><</a>
+							<a href="draft_prev"><</a>
 						</li>
 						<li>
-							<a href="#">1</a>
+							<a href="draft_1">1</a>
 						</li>
 						<li>
-							<a href="#">2</a>
+							<a href="draft_2">2</a>
 						</li>
 						<li>
-							<a href="#">3</a>
+							<a href="draft_3">3</a>
 						</li>
 						<li>
-							<a href="#">4</a>
+							<a href="draft_4">4</a>
 						</li>
 						<li>
-							<a href="#">5</a>
+							<a href="draft_5">5</a>
 						</li>
 						<li>
-							<a href="#">></a>
+							<a href="draft_next">></a>
 						</li>
 					</ul>
 				</div>
@@ -324,7 +308,9 @@
         someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"');
         someJavaScriptVar = someJavaScriptVar.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
         var JSON = JSON.parse(someJavaScriptVar);
-		var i = 0;
+		var i = {{pagina}};
+		var n_pag = {{pagina}}+5;
+		
 		if (JSON.length == 0) {
 
 			var posts = document.getElementById('posts');
@@ -332,18 +318,19 @@
 
 		} else {
 
-			for (i = 0; i<JSON.length; i++) {
+			for (i; i<n_pag; i++) {
+				if(i<JSON.length){
+					var id = JSON[i]._id.$oid;
+					var titulo = JSON[i].titulo;
+					var nombre = JSON[i].nombre;
+					var fecha = JSON[i].fecha;
+					var resumen = JSON[i].resumen;
+					resumen = resumen.replace(/\\r\\n/g, "<br/>");
+					var editores = JSON[i].editores;
+					var imagen = JSON[i].imagen;
+					var posts = document.getElementById('posts');
 
-				var id = JSON[i]._id.$oid;
-				var titulo = JSON[i].titulo;
-				var nombre = JSON[i].nombre;
-				var fecha = JSON[i].fecha;
-				var resumen = JSON[i].resumen;
-				resumen = resumen.replace(/\\r\\n/g, "<br/>");
-				var imagen = JSON[i].imagen;
-				var posts = document.getElementById('posts');
-
-				posts.innerHTML = posts.innerHTML + '<div class="col-md-10"></br></br>\
+					posts.innerHTML = posts.innerHTML + '<div class="col-md-10"></br></br>\
 															<div class="media">\
 																 <a href="#" class="pull-left"><img src="../static/imagenes/'+imagen+'" style="max-height: 128px; max-width: 128px" class="media-object"></a>\
 																<div class="media-body">\
@@ -359,12 +346,11 @@
 																</div>\
 															</div>\
 														</div>\
-														<div class="col-md-2"></br>\
+														<div class="col-md-2"></br></br>\
 															 <span><a href="edit?id='+id+'"><button class="btn btn-default">Editar</button></a></span></br></br>\
 															 <span><a href="publish?id='+id+'"><button class="btn btn-default">Publicar</button></a></span></br></br>\
-															 <span><a href="delete?id='+id+'"><button class="btn btn-danger">Eliminar</button></a></span>\
-														</div>';   
-
+														</div>';  
+				} 
 			}
 
 		}
