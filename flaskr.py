@@ -83,12 +83,15 @@ def publish():
 	user = users.find_one({ "correo": username })
 	nombre = user["nombre"]
 	apellido = user["apellido"]
-	nombreCompleto = nombre+" "+apellido
-	posts.update_one({"_id": ObjectId(request.args.get('id'))}, {"$set": {"publicado": 1}}, upsert=False)
-	postUpdateado = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
-	titulo = postUpdateado["titulo"]
-	draftPosts = list(posts.find({"publicado": 0}))
-	return render_template('articulosPorPublicar.html', user = session['name'], published = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+	nombreCompleto = nombre+" "+apellido	
+	if user["tipo"] == "Editor":
+		posts.update_one({"_id": ObjectId(request.args.get('id'))}, {"$set": {"publicado": 1}}, upsert=False)
+		postUpdateado = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
+		titulo = postUpdateado["titulo"]
+		draftPosts = list(posts.find({"publicado": 0}))	
+		return render_template('articulosPorPublicar.html', user = session['name'], published = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+	draftPosts = list(posts.find({"publicado": 0}))	
+	return render_template('articulosPorPublicar.html', user = session['name'], published = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/delete')
 def delete():

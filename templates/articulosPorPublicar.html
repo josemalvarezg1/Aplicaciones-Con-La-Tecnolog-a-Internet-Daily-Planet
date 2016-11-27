@@ -19,31 +19,63 @@
 
 			{% if published %}
 
-				<div class="modal fade" id="modal-published" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								 
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-									×
-								</button>
-								<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
-									Artículo Publicado
-								</h4>
-							</div>
-							<div class="modal-body">	
-								<p style="text-align: center;">Artículo <strong>{{titulo}}</strong> publicado exitosamente.</p>
-								<div class="modal-footer" style="text-align: center;">							 
-									<button type="button" class="btn btn-primary" data-dismiss="modal">
-										Aceptar
+				{% if published == "true" %}
+
+					<div class="modal fade" id="modal-published" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									 
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+										×
 									</button>
+									<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+										Artículo Publicado
+									</h4>
+								</div>
+								<div class="modal-body">	
+									<p style="text-align: center;">Artículo <strong>{{titulo}}</strong> publicado exitosamente.</p>
+									<div class="modal-footer" style="text-align: center;">							 
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+											Aceptar
+										</button>
+									</div>
 								</div>
 							</div>
+							
 						</div>
 						
 					</div>
-					
-				</div>
+
+				{% else %}
+
+					<div class="modal fade" id="modal-published" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									 
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+										×
+									</button>
+									<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+										Artículo No Publicado
+									</h4>
+								</div>
+								<div class="modal-body">	
+									<p style="text-align: center;">El artículo no ha sido publicado ya que usted no es Editor.</p>
+									<div class="modal-footer" style="text-align: center;">							 
+										<button type="button" class="btn btn-primary" data-dismiss="modal">
+											Aceptar
+										</button>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						
+					</div>
+
+				{% endif %}
 
 			{% endif %}
 
