@@ -150,7 +150,7 @@ def editar():
 	posts.update_one({"_id": ObjectId(request.form.get('id_post'))}, {"$set": {"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido}}, upsert=False)
 	#Si ya no lo ha editado lo inserto como nuevo editor
 	post = posts.find_one({"_id": ObjectId(request.form.get('id_post'))})
-	if not posts.find_one({"_id": ObjectId(request.form.get('id_post')),"editores": {"$in": post["editores"]}}):
+	if not nombreCompleto in post["editores"]:
 		posts.update_one({"_id": ObjectId(request.form.get('id_post'))}, {"$push": {"editores": nombreCompleto}})
 	postUpdateado = posts.find_one({ "_id": ObjectId(request.form.get('id_post'))})
 	titulo = postUpdateado["titulo"]
@@ -207,7 +207,7 @@ def article():
 	articulo = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
 	titulo = articulo["titulo"]
 	nombre = articulo["nombre"]
-	editores = "Alvarez, Rodriguez"
+	editores = ', '.join(articulo["editores"])
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
@@ -229,7 +229,7 @@ def articleNS():
 	articulo = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
 	titulo = articulo["titulo"]
 	nombre = articulo["nombre"]
-	editores = "Alvarez, Rodriguez"
+	editores = ', '.join(articulo["editores"])
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
@@ -248,7 +248,7 @@ def comment():
 	nombreCompleto = nombre+" "+apellido
 	titulo = articulo["titulo"]
 	nombre = articulo["nombre"]
-	editores = "Alvarez, Rodriguez"
+	editores = ', '.join(articulo["editores"])
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
@@ -277,7 +277,7 @@ def addFavorite():
 	nombreCompleto = nombre+" "+apellido
 	titulo = articulo["titulo"]
 	nombre = articulo["nombre"]
-	editores = "Alvarez, Rodriguez"
+	editores = ', '.join(articulo["editores"])
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
@@ -307,7 +307,7 @@ def removeFavorite():
 	nombreCompleto = nombre+" "+apellido
 	titulo = articulo["titulo"]
 	nombre = articulo["nombre"]
-	editores = "Alvarez, Rodriguez"
+	editores = ', '.join(articulo["editores"])
 	fechaPublic = articulo["fecha"]
 	resumen = articulo["resumen"]
 	contenido = articulo["contenido"]
@@ -373,6 +373,7 @@ def updateProfile():
 	correo = user['correo']
 	fechaNac = user['fechaNac']
 	avatar = user['avatar']
+	#FALTA UPDATEAR EL NOMBRE DEL AUTOR EN LOS POSTS
 	comments.update({"nombre": nombreCompletoViejo}, {"$set": {"nombre": nombreCompleto, "avatar": avatar}}, upsert=False, multi=True)
 	pais = user['pais']
 	tipo = user['tipo']

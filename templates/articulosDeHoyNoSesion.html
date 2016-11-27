@@ -365,6 +365,7 @@
 				var titulo = JSON[i].titulo;
 				var nombre = JSON[i].nombre;
 				var fecha = JSON[i].fecha;
+				var editores = JSON[i].editores;
 				var resumen = JSON[i].resumen;
 				resumen = resumen.replace(/\\r\\n/g, "<br/>");
 				var imagen = JSON[i].imagen;
@@ -385,7 +386,7 @@
 														</div>\
 														<div class="col-md-2"></br>\
 															 <span class="label label-default">Fecha de Publicación: '+fecha+'</span></br></br>\
-															 <span class="label label-default">Editores: Alvarez, Rodriguez</span>\
+															 <span class="label label-default">Editores: '+editores+'</span>\
 														</div>';   
 
 			}
