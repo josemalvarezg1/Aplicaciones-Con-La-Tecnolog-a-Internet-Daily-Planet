@@ -39,12 +39,14 @@
 				
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li>
-							<a href="create">Crear Artículo</a>
-						</li>
-						<li>
-							<a href="draft">Artículos por Publicar</a>
-						</li>
+						{% if isReader == "false" %}
+							<li>
+								<a href="create">Crear Artículo</a>
+							</li>
+							<li>
+								<a href="draft">Artículos por Publicar</a>
+							</li>
+						{% endif %}
 						<li>
 							<a href="favorites">Artículos Favoritos</a>
 						</li>

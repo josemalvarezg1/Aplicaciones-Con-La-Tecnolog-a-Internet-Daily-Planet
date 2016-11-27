@@ -30,7 +30,12 @@ def index():
 @app.route('/inicio')
 def indexSesion():
 	allPosts = list(posts.find({"publicado": 1}))
-	return render_template('articulosDeHoy.html', allPosts = json.dumps(allPosts, default=json_util.default))
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
+	return render_template('articulosDeHoy.html', isReader = isReader, allPosts = json.dumps(allPosts, default=json_util.default))
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -44,7 +49,11 @@ def login():
 		return render_template('articulosDeHoyNoSesion.html', error = "true", todaysPosts = json.dumps(todaysPosts, default=json_util.default))
 	if user["pass"] == password:
 		session['name'] = username
-		return render_template('articulosDeHoy.html', user = username, allPosts = json.dumps(allPosts, default=json_util.default))
+		user = users.find_one({ "correo": username })
+		isReader = "false"
+		if user["tipo"] == "Lector":
+			isReader = "true"
+		return render_template('articulosDeHoy.html', user = username, isReader = isReader, allPosts = json.dumps(allPosts, default=json_util.default))
 	return render_template('articulosDeHoyNoSesion.html', error = "true", todaysPosts = json.dumps(todaysPosts, default=json_util.default))
 
 @app.route('/logout')
@@ -65,7 +74,7 @@ def draft():
 	nombre = user["nombre"]
 	apellido = user["apellido"]
 	nombreCompleto = nombre+" "+apellido
-	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	draftPosts = list(posts.find({"publicado": 0}))
 	return render_template('articulosPorPublicar.html', user = session['name'], draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/publish')
@@ -78,7 +87,7 @@ def publish():
 	posts.update_one({"_id": ObjectId(request.args.get('id'))}, {"$set": {"publicado": 1}}, upsert=False)
 	postUpdateado = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
 	titulo = postUpdateado["titulo"]
-	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	draftPosts = list(posts.find({"publicado": 0}))
 	return render_template('articulosPorPublicar.html', user = session['name'], published = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/delete')
@@ -93,9 +102,9 @@ def delete():
 	posts.remove({"_id": ObjectId(request.args.get('id'))})
 	if postEliminado:
 		titulo = postEliminado["titulo"]
-		draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+		draftPosts = list(posts.find({"publicado": 0}))
 		return render_template('articulosPorPublicar.html', user = session['name'], deleted = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
-	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	draftPosts = list(posts.find({"publicado": 0}))
 	return render_template('articulosPorPublicar.html', user = session['name'], draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 
@@ -133,7 +142,7 @@ def editar():
 	posts.update_one({"_id": ObjectId(request.form.get('id_post'))}, {"$set": {"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido}}, upsert=False)
 	postUpdateado = posts.find_one({ "_id": ObjectId(request.form.get('id_post'))})
 	titulo = postUpdateado["titulo"]
-	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	draftPosts = list(posts.find({"publicado": 0}))
 	return render_template('articulosPorPublicar.html', user = session['name'], edited = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/crear', methods=['POST'])
@@ -155,7 +164,7 @@ def crear():
 	fechaPublic = time.strftime("%d/%m/%Y")
 	publicado = 0
 	posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": avatar, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado})
-	draftPosts = list(posts.find({"nombre": nombreCompleto, "publicado": 0}))
+	draftPosts = list(posts.find({"publicado": 0}))
 	return render_template('articulosPorPublicar.html', user = session['name'], created = "true", draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/register', methods=['POST'])
@@ -192,11 +201,15 @@ def article():
 	contenido = articulo["contenido"]
 	clave = articulo["clave"]
 	imagen = articulo["imagen"]
+	user = users.find_one({ "correo": username })
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
 	isFavorite = "false"
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, clave = clave, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, isFavorite = isFavorite, isReader = isReader, clave = clave, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/articuloNS', methods=['GET'])
 def articleNS():
@@ -230,6 +243,9 @@ def comment():
 	clave = articulo["clave"]
 	imagen = articulo["imagen"]
 	avatar = user["avatar"]
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
 	isFavorite = "false"
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
@@ -237,7 +253,7 @@ def comment():
 	content = request.form.get('content')
 	comments.insert_one({"id_article": articulo, "nombre": nombreCompleto, "fecha": fechaPublic, "contenido": content, "avatar": avatar})
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, isFavorite = isFavorite, isReader = isReader, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/addFavorite')
 def addFavorite():
@@ -256,6 +272,9 @@ def addFavorite():
 	clave = articulo["clave"]
 	imagen = articulo["imagen"]
 	avatar = user["avatar"]
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
 	fechaPublic = time.strftime("%d/%m/%Y")
 	content = request.form.get('content')
 	users.update_one({"correo": username}, {"$push": {"favoritos": ObjectId(request.args.get('id'))}})
@@ -263,7 +282,7 @@ def addFavorite():
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, isFavorite = isFavorite, isReader = isReader, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 
 @app.route('/removeFavorite')
@@ -283,6 +302,9 @@ def removeFavorite():
 	clave = articulo["clave"]
 	imagen = articulo["imagen"]
 	avatar = user["avatar"]
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
 	fechaPublic = time.strftime("%d/%m/%Y")
 	content = request.form.get('content')
 	users.update_one({"correo": username}, {"$pull": {"favoritos": ObjectId(request.args.get('id'))}})
@@ -290,7 +312,7 @@ def removeFavorite():
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": request.args.get('id')}}}):
 		isFavorite = "true"	
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	return render_template('articuloX.html', user = username, isReader = isReader, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/profile')
 def profile():
@@ -305,13 +327,20 @@ def profile():
 	tipo = user['tipo']
 	descripcion = user['descripcion']
 	password = user['pass']
-	return render_template('editarPerfil.html', nombre = nombre, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
+	return render_template('editarPerfil.html', nombre = nombre, isReader = isReader, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
 
 @app.route('/updateProfile', methods=['POST'])
 def updateProfile():
 	username = session['name']
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompletoViejo = nombre+" "+apellido
 	nombre = request.form.get('nombre')
-	apellido  = request.form.get('apellido')
+	apellido  = request.form.get('apellido')	
 	correo = request.form.get('correo')
 	fechaNac = request.form.get('fechaNac')
 	file = request.files['pic']
@@ -328,14 +357,19 @@ def updateProfile():
 	user = users.find_one({ "correo": username })
 	nombre = user["nombre"]
 	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido	
 	correo = user['correo']
 	fechaNac = user['fechaNac']
 	avatar = user['avatar']
+	comments.update({"nombre": nombreCompletoViejo}, {"$set": {"nombre": nombreCompleto, "avatar": avatar}}, upsert=False, multi=True)
 	pais = user['pais']
 	tipo = user['tipo']
 	descripcion = user['descripcion']
 	password = user['pass']
-	return render_template('editarPerfil.html', updated = "true", nombre = nombre, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
+	return render_template('editarPerfil.html', updated = "true", isReader = isReader, nombre = nombre, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
 
 @app.route('/favorites')
 def favorites():
@@ -345,8 +379,11 @@ def favorites():
 	apellido = user["apellido"]
 	nombreCompleto = nombre+" "+apellido
 	favoritePosts = user["favoritos"]
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
 	thosePosts = list(posts.find({"_id": {"$in":favoritePosts}}))
-	return render_template('articulosFavoritos.html', user = session['name'], thosePosts = json.dumps(thosePosts, default=json_util.default))
+	return render_template('articulosFavoritos.html', user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
 
 @app.route('/removeFavoriteList')
 def removeFavoriteList():
@@ -357,17 +394,22 @@ def removeFavoriteList():
 	apellido = user["apellido"]
 	nombreCompleto = nombre+" "+apellido
 	favoritePosts = user["favoritos"]
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
 	thosePosts = list(posts.find({"_id": {"$in":favoritePosts}}))
-	return render_template('articulosFavoritos.html', user = session['name'], thosePosts = json.dumps(thosePosts, default=json_util.default))
+	return render_template('articulosFavoritos.html', user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
 
 @app.route('/search', methods=['POST'])
 def search():
 	username = session['name']	
 	user = users.find_one({ "correo": username })
 	buscar  = request.form.get('buscar')
-	print(buscar)
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
 	thosePosts = list(posts.find({"$or": [{"fecha": {"$regex": buscar}},{"titulo": {"$regex": buscar}},{"nombre": {"$regex": buscar}},{"clave": {"$regex": buscar}}], "publicado": 1}))
-	return render_template('articulosBuscados.html', user = session['name'], thosePosts = json.dumps(thosePosts, default=json_util.default))
+	return render_template('articulosBuscados.html', user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
 
 if __name__ == '__main__':
 	app.debug = True
