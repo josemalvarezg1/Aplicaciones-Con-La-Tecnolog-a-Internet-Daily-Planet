@@ -50,6 +50,17 @@
 						<li>
 							<a href="favorites">Artículos Favoritos</a>
 						</li>
+						{% if isReader == "false" %}
+							{% if isAuthor == "true" %}
+								<li>
+									<a href="myArticles">Artículos Publicados</a>
+								</li>
+							{% else %}
+								<li>
+									<a href="myArticles">Artículos Editados</a>
+								</li>
+							{% endif %}
+						{% endif %}
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li>

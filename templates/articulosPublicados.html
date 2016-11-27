@@ -5,8 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Daily Planet - Artículos Publicados</title>
-    <link rel='shortcut icon' type='image/x-icon' href='../static/imagenes/favicon.ico'/>
+    {% if isAuthor == "true" %}
+		<title>Daily Planet - Artículos Publicados</title>		
+	{% else %}
+		<title>Daily Planet - Artículos Editados</title>
+	{% endif %}
+
+	<link rel='shortcut icon' type='image/x-icon' href='../static/imagenes/favicon.ico'/>
 
     <link href="../static/vendor/css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/vendor/css/style.css" rel="stylesheet">
@@ -16,44 +21,87 @@
 
     <div class="container-fluid">
 	<div class="row">
+
+		{% if created %}
+
+			<div class="modal fade" id="modal-post" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							 
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								×
+							</button>
+							<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+								Artículo Publicado
+							</h4>
+						</div>
+						<div class="modal-body">	
+							<p style="text-align: center;">Artículo {{titulo}} publicado exitosamente.</p>
+							<div class="modal-footer" style="text-align: center;">							 
+								<button type="button" class="btn btn-primary" data-dismiss="modal">
+									Aceptar
+								</button>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+
+		{% endif %}
+
 		<div class="col-md-12">
 			<nav class="navbar navbar-default" role="navigation">
 				<div class="navbar-header">
 					 
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 						 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-					</button> <a class="navbar-brand" href="#">Inicio</a>
+					</button> <a class="navbar-brand active" href="inicio">Inicio</a>
 				</div>
 				
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
+						{% if isReader == "false" %}
+							<li>
+								<a href="create">Crear Artículo</a>
+							</li>
+							<li>
+								<a href="draft">Artículos por Publicar</a>
+							</li>
+						{% endif %}
 						<li>
-							<a href="#">Crear Artículo</a>
+							<a href="favorites">Artículos Favoritos</a>
 						</li>
-						<li>
-							<a href="#">Artículos por Publicar</a>
-						</li>
-						<li>
-							<a href="#">Artículos Favoritos</a>
-						</li>
+						{% if isAuthor == "true" %}
+							<li class="active">
+								<a href="myArticles">Artículos Publicados</a>
+							</li>
+						{% else %}
+							<li class="active">
+								<a href="myArticles">Artículos Editados</a>
+							</li>
+						{% endif %}
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
+						
 						<li>
-							<a href="#">Perfil</a>
+							<a href="profile">Perfil</a>
 						</li>
 						<li>
-							<a href="#">Cerrar Sesión</a>
+							<a href="logout">Cerrar Sesión</a>
 						</li>
+
 					</ul>
-					
-					<form class="navbar-form navbar-right" role="search">
+					<form class="navbar-form navbar-right" role="search" action="search" method="POST">
 						<div class="form-group">
-							<input class="form-control" type="text" placeholder="Búsqueda">
+							<input class="form-control" type="text" name="buscar" placeholder="Búsqueda">
 						</div> 
 						<button type="submit" class="btn btn-default">
 							Buscar
 						</button>
-
+						<img src="../static/imagenes/autor.png" style="max-width: 32px; max-height: 32px; display: inline;">
 					</form>
 					
 				</div>
@@ -62,13 +110,20 @@
 			<div class="row content">
 	  			<div class="col-sm-12">
 					<div id="logo" >
-						<a href="#"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
+						<a href="inicio"><img src="../static/imagenes/logo.png" width="40%" class="img-responsive center-block"></a>
 					</div>
 				</div>
 			</div>
-			<h1 class="text-center">
-				Artículos Publicados
-			</h1>
+			{% if isAuthor == "true" %}
+				<h1 class="text-center">
+					Artículos Publicados
+				</h1>
+			{% else %}
+				<h1 class="text-center">
+					Artículos Editados
+				</h1>
+			{% endif %}
+			
 			<div class="btn-group" style="float: right;">				 
 				<button class="btn btn-default">
 					Ordenar por
@@ -78,7 +133,7 @@
 				</button>
 				<ul class="dropdown-menu">
 					<li>
-						<a href="#">Nombre</a>
+						<a href="#">Hora</a>
 					</li>
 					<li>
 						<a href="#">Fecha</a>
@@ -86,91 +141,7 @@
 				</ul>
 			</div>
 			<div class="row">
-				<div class="col-md-10"></br></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span>
-				</div>
-				<div class="col-md-10"></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span>
-				</div>
-				<div class="col-md-10"></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span>
-				</div>
-				<div class="col-md-10"></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span>
-				</div>
-				<div class="col-md-10"></br>
-					<div class="media">
-						 <a href="#" class="pull-left"><img alt="Bootstrap Media Preview" src="http://lorempixel.com/128/128/" class="media-object"></a>
-						<div class="media-body">
-							<h4 class="media-heading">
-								Dura opción de los narcosobrinos: Larga cárcel o cooperar
-							</h4>
-							<h4 class="media-heading">
-								Franco Ordoñez
-							</h4> Los sobrinos del presidente de Venezuela enfrentan de 20 a 30 años en la cárcel, según expertos, por planes de entrar de contrabando a Estados Unidos 800 kilogramos de cocaína, publica El Nuevo Herald.		
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2"></br></br>
-					 <span class="label label-default">Fecha de Publicación: 23/11/2016</span></br></br>
-					 <span class="label label-default">Editores: Alvarez, Rodriguez</span>
-				</div>
+				<div id="posts"></div>
 			</div>
 			<div class="text-center">
 				<ul  class="pagination">
@@ -204,5 +175,61 @@
     <script src="../static/vendor/js/jquery.min.js"></script>
     <script src="../static/vendor/js/bootstrap.min.js"></script>
     <script src="../static/vendor/js/scripts.js"></script>
+    <script type="text/javascript">
+
+        var someJavaScriptVar = '{{ allPosts }}';
+        someJavaScriptVar = someJavaScriptVar.replace(/&#34;/g, '"');
+        someJavaScriptVar = someJavaScriptVar.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
+        var JSON = JSON.parse(someJavaScriptVar);
+		var i = 0;
+		if (JSON.length == 0) {
+
+			var posts = document.getElementById('posts');
+			posts.innerHTML = posts.innerHTML + '<p style="margin-left:1%"><strong>No se han encontrado artículos publicados.</strong></p></br>';
+
+		} else {
+
+			for (i = 0; i<JSON.length; i++) {
+
+				var id = JSON[i]._id.$oid;
+				var titulo = JSON[i].titulo;
+				var nombre = JSON[i].nombre;
+				var fecha = JSON[i].fecha;
+				var editores = JSON[i].editores;
+				var resumen = JSON[i].resumen;
+				resumen = resumen.replace(/\\r\\n/g, "<br/>");
+				var imagen = JSON[i].imagen;
+				var posts = document.getElementById('posts');
+
+				posts.innerHTML = posts.innerHTML + '<div class="col-md-10"></br></br>\
+															<div class="media">\
+																 <a href="#" class="pull-left"><img src="../static/imagenes/'+imagen+'" style="max-height: 128px; max-width: 128px" class="media-object"></a>\
+																<div class="media-body">\
+																	<h4 class="media-heading">\
+																		<a href="articulo?id='+id+'">'+titulo+'</a>\
+																	</h4>\
+																	<h4 class="media-heading">\
+																		'+nombre+'\
+																	</h4>'+resumen+'\
+																</div>\
+															</div>\
+														</div>\
+														<div class="col-md-2"></br>\
+															 <span class="label label-default">Fecha de Publicación: '+fecha+'</span></br></br>\
+															 <span class="label label-default">Editores: '+editores+'</span>\
+														</div>';   
+
+			}
+
+		}
+
+    </script>
+    <script type="text/javascript">
+
+    	$(function () {
+            $('#modal-post').modal('toggle');
+        });
+
+    </script>
   </body>
 </html>

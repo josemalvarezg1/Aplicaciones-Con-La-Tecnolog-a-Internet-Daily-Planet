@@ -35,7 +35,10 @@ def indexSesion():
 	isReader = "false"
 	if user["tipo"] == "Lector":
 		isReader = "true"
-	return render_template('articulosDeHoy.html', isReader = isReader, allPosts = json.dumps(allPosts, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articulosDeHoy.html', isAuthor = isAuthor, isReader = isReader, allPosts = json.dumps(allPosts, default=json_util.default))
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -53,7 +56,10 @@ def login():
 		isReader = "false"
 		if user["tipo"] == "Lector":
 			isReader = "true"
-		return render_template('articulosDeHoy.html', user = username, isReader = isReader, allPosts = json.dumps(allPosts, default=json_util.default))
+		isAuthor = "false"
+		if user["tipo"] == "Autor":
+			isAuthor = "true"
+		return render_template('articulosDeHoy.html', user = username, isAuthor = isAuthor, isReader = isReader, allPosts = json.dumps(allPosts, default=json_util.default))
 	return render_template('articulosDeHoyNoSesion.html', error = "true", todaysPosts = json.dumps(todaysPosts, default=json_util.default))
 
 @app.route('/logout')
@@ -65,7 +71,12 @@ def indexNoSesion():
 
 @app.route('/create')
 def create():
-	return render_template('crearArticulo.html', user = session['name'])
+	username = session['name']
+	user = users.find_one({ "correo": username })
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('crearArticulo.html', user = session['name'], isAuthor = isAuthor)
 
 @app.route('/draft')
 def draft():
@@ -75,7 +86,10 @@ def draft():
 	apellido = user["apellido"]
 	nombreCompleto = nombre+" "+apellido
 	draftPosts = list(posts.find({"publicado": 0}))
-	return render_template('articulosPorPublicar.html', user = session['name'], draftPosts = json.dumps(draftPosts, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/publish')
 def publish():
@@ -89,9 +103,15 @@ def publish():
 		postUpdateado = posts.find_one({ "_id": ObjectId(request.args.get('id'))})
 		titulo = postUpdateado["titulo"]
 		draftPosts = list(posts.find({"publicado": 0}))	
-		return render_template('articulosPorPublicar.html', user = session['name'], published = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+		isAuthor = "false"
+		if user["tipo"] == "Autor":
+			isAuthor = "true"
+		return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, published = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
 	draftPosts = list(posts.find({"publicado": 0}))	
-	return render_template('articulosPorPublicar.html', user = session['name'], published = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, published = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/delete')
 def delete():
@@ -106,9 +126,15 @@ def delete():
 	if postEliminado:
 		titulo = postEliminado["titulo"]
 		draftPosts = list(posts.find({"publicado": 0}))
-		return render_template('articulosPorPublicar.html', user = session['name'], deleted = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+		isAuthor = "false"
+		if user["tipo"] == "Autor":
+			isAuthor = "true"
+		return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, deleted = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
 	draftPosts = list(posts.find({"publicado": 0}))
-	return render_template('articulosPorPublicar.html', user = session['name'], draftPosts = json.dumps(draftPosts, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 
 @app.route('/edit')
@@ -124,7 +150,10 @@ def edit():
 	imagen = post["imagen"]
 	clave = post["clave"]
 	contenido = post["contenido"]
-	return render_template('editarArticulo.html', user = session['name'], titulo = titulo, resumen = resumen, imagen = imagen, clave = clave, contenido = contenido)
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('editarArticulo.html', user = session['name'], isAuthor = isAuthor, titulo = titulo, resumen = resumen, imagen = imagen, clave = clave, contenido = contenido)
 
 @app.route('/editar', methods=['POST'])
 def editar():
@@ -146,7 +175,10 @@ def editar():
 	post = posts.find_one({"_id": ObjectId(request.form.get('id_post'))})
 	if user["tipo"] == "Autor" and post["nombre"] != nombreCompleto:
 		draftPosts = list(posts.find({"publicado": 0}))
-		return render_template('articulosPorPublicar.html', user = session['name'], edited = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
+		isAuthor = "false"
+		if user["tipo"] == "Autor":
+			isAuthor = "true"
+		return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, edited = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
 	posts.update_one({"_id": ObjectId(request.form.get('id_post'))}, {"$set": {"titulo": titulo, "resumen": resumen, "imagen": imagen, "clave": clave, "contenido": contenido}}, upsert=False)
 	#Si ya no lo ha editado lo inserto como nuevo editor
 	post = posts.find_one({"_id": ObjectId(request.form.get('id_post'))})
@@ -155,7 +187,10 @@ def editar():
 	postUpdateado = posts.find_one({ "_id": ObjectId(request.form.get('id_post'))})
 	titulo = postUpdateado["titulo"]
 	draftPosts = list(posts.find({"publicado": 0}))
-	return render_template('articulosPorPublicar.html', user = session['name'], edited = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, edited = "true", titulo = titulo, draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/crear', methods=['POST'])
 def crear():
@@ -178,9 +213,15 @@ def crear():
 	if user["tipo"] == "Autor":	
 		posts.insert_one({"titulo": titulo, "resumen": resumen, "imagen": avatar, "clave": clave, "contenido": contenido, "nombre": nombreCompleto, "fecha": fechaPublic, "publicado": publicado, "editores": []})
 		draftPosts = list(posts.find({"publicado": 0}))
-		return render_template('articulosPorPublicar.html', user = session['name'], created = "true", draftPosts = json.dumps(draftPosts, default=json_util.default))
+		isAuthor = "false"
+		if user["tipo"] == "Autor":
+			isAuthor = "true"
+		return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, created = "true", draftPosts = json.dumps(draftPosts, default=json_util.default))
 	draftPosts = list(posts.find({"publicado": 0}))
-	return render_template('articulosPorPublicar.html', user = session['name'], created = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articulosPorPublicar.html', user = session['name'], isAuthor = isAuthor, created = "false", draftPosts = json.dumps(draftPosts, default=json_util.default))
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -224,7 +265,10 @@ def article():
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, isReader = isReader, clave = clave, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articuloX.html', user = username, isAuthor = isAuthor, isFavorite = isFavorite, isReader = isReader, clave = clave, titulo = titulo, id_article = request.args.get('id'), nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/articuloNS', methods=['GET'])
 def articleNS():
@@ -268,7 +312,10 @@ def comment():
 	content = request.form.get('content')
 	comments.insert_one({"id_article": articulo, "nombre": nombreCompleto, "fecha": fechaPublic, "contenido": content, "avatar": avatar})
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, isReader = isReader, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articuloX.html', user = username, isAuthor = isAuthor, isFavorite = isFavorite, isReader = isReader, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/addFavorite')
 def addFavorite():
@@ -297,7 +344,10 @@ def addFavorite():
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": ObjectId(request.args.get('id'))}}}):
 		isFavorite = "true"
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isFavorite = isFavorite, isReader = isReader, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articuloX.html', user = username, isAuthor = isAuthor, isFavorite = isFavorite, isReader = isReader, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 
 @app.route('/removeFavorite')
@@ -327,7 +377,10 @@ def removeFavorite():
 	if users.find_one({"correo": username, "favoritos": {"$elemMatch": {"$eq": request.args.get('id')}}}):
 		isFavorite = "true"	
 	allComents = list(comments.find({"id_article": articulo}))
-	return render_template('articuloX.html', user = username, isReader = isReader, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articuloX.html', user = username, isAuthor = isAuthor, isReader = isReader, isFavorite = isFavorite, id_article = request.args.get('id'), clave = clave, titulo = titulo, nombre = nombre, imagen = imagen, editores = editores, fecha = fechaPublic, resumen = resumen, contenido = contenido, allComents = json.dumps(allComents, default=json_util.default))
 
 @app.route('/profile')
 def profile():
@@ -345,7 +398,10 @@ def profile():
 	isReader = "false"
 	if user["tipo"] == "Lector":
 		isReader = "true"
-	return render_template('editarPerfil.html', nombre = nombre, isReader = isReader, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('editarPerfil.html', isAuthor = isAuthor, nombre = nombre, isReader = isReader, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
 
 @app.route('/updateProfile', methods=['POST'])
 def updateProfile():
@@ -385,7 +441,10 @@ def updateProfile():
 	isReader = "false"
 	if user["tipo"] == "Lector":
 		isReader = "true"
-	return render_template('editarPerfil.html', updated = "true", isReader = isReader, nombre = nombre, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('editarPerfil.html', isAuthor = isAuthor, updated = "true", isReader = isReader, nombre = nombre, apellido = apellido, correo = correo, fechaNac = fechaNac, avatar = avatar, pais = pais, tipo = tipo, descripcion = descripcion, password = password)
 
 @app.route('/favorites')
 def favorites():
@@ -399,7 +458,10 @@ def favorites():
 	if user["tipo"] == "Lector":
 		isReader = "true"
 	thosePosts = list(posts.find({"_id": {"$in":favoritePosts}}))
-	return render_template('articulosFavoritos.html', user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articulosFavoritos.html', isAuthor = isAuthor, user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
 
 @app.route('/removeFavoriteList')
 def removeFavoriteList():
@@ -414,7 +476,10 @@ def removeFavoriteList():
 	if user["tipo"] == "Lector":
 		isReader = "true"
 	thosePosts = list(posts.find({"_id": {"$in":favoritePosts}}))
-	return render_template('articulosFavoritos.html', user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+	return render_template('articulosFavoritos.html', isAuthor = isAuthor, user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -426,6 +491,26 @@ def search():
 		isReader = "true"
 	thosePosts = list(posts.find({"$or": [{"fecha": {"$regex": buscar}},{"titulo": {"$regex": buscar}},{"nombre": {"$regex": buscar}},{"clave": {"$regex": buscar}}], "publicado": 1}))
 	return render_template('articulosBuscados.html', user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
+
+@app.route('/myArticles')
+def myArticles():
+	allPosts = list(posts.find({"publicado": 1}))
+	username = session['name']	
+	user = users.find_one({ "correo": username })
+	nombre = user["nombre"]
+	apellido = user["apellido"]
+	nombreCompleto = nombre+" "+apellido
+	isReader = "false"
+	if user["tipo"] == "Lector":
+		isReader = "true"
+	isAuthor = "false"
+	if user["tipo"] == "Autor":
+		isAuthor = "true"
+		allPosts = list(posts.find({"publicado": 1, "nombre": nombreCompleto}))
+	if user["tipo"] == "Editor":
+		isAuthor = "false"
+		allPosts = list(posts.find({"publicado": 1, "editores": {"$in" : [nombreCompleto]}}))
+	return render_template('articulosPublicados.html', isAuthor = isAuthor, isReader = isReader, allPosts = json.dumps(allPosts, default=json_util.default))
 
 if __name__ == '__main__':
 	app.debug = True
