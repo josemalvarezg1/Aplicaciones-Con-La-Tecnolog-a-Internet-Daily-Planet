@@ -489,7 +489,7 @@ def removeFavoriteList():
 	isAuthor = "false"
 	if user["tipo"] == "Autor":
 		isAuthor = "true"
-	return render_template('articulosFavoritos.html', isAuthor = isAuthor, user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
+	return render_template('articulosFavoritos.html', isAuthor = isAuthor, pagina = 0, user = session['name'], isReader = isReader, thosePosts = json.dumps(thosePosts, default=json_util.default))
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -1184,7 +1184,7 @@ def myArticles_next():
 
 if __name__ == '__main__':
 	app.debug = True
-	app.run()
+	app.run(host='192.168.0.103', port=5000)
 
 
 
